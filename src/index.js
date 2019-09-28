@@ -6,7 +6,7 @@ import App from './components/App.jsx';
 const config = {
   type: Phaser.AUTO,
   parent: 'phaser-example',
-  width: 800,
+  width: 1000,
   height: 600,
   scene: {
     preload: preload,
@@ -18,7 +18,7 @@ function preload() {
   this.load.image('logo', logoImg);
 }
 function create() {
-  const logo = this.add.image(400, 150, 'logo');
+  const logo = this.add.image(500, 150, 'logo');
   this.tweens.add({
     targets: logo,
     y: 450,
