@@ -7,13 +7,12 @@ font-family: 'Inconsolata', monospace;
 font-size: 1.5em;
 text-align: center;
 color: lime;
+text-align: center;
 `;
 export default class App extends React.Component {
   render() {
     return (
-      <div style={{ textAlign: "center" }}>
-        <Title>Welcome To Battleship!</Title>
-      </div>
+      <Title>Welcome To Battleship!</Title>
     );
   }
 }
