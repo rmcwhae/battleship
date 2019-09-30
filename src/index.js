@@ -20,17 +20,17 @@ const config = {
 };
 const game = new Phaser.Game(config);
 function preload() {
-  this.load.image('splash', splashImg);
+  // this.load.image('splash', splashImg);
 }
 function create() {
-  const logo = this.add.image(500, 300, 'splash');
-  // this.tweens.add({
-  //   targets: logo,
-  //   y: 450,
-  //   duration: 2000
-  //   // ease: 'Power2',
-  //   // yoyo: true,
-  //   // loop: -1
-  // });
+  // const logo = this.add.image(500, 300, 'splash');
+  var graphics = this.add.graphics();
+
+  this.add.text(200 - 320 / 2, 0, 'Your Ships', { font: '24pt "Inconsolata"', fill: 'green' });
+  this.add.text(600 - 320 / 2, 0, 'Opponent', { font: '24pt "Inconsolata"', fill: 'green' });
+
+  const playerBoard = this.add.grid(200, 200, 320, 320, 40, 40, 0x057605);
+  const opponentBoard = this.add.grid(600, 200, 320, 320, 40, 40, 0x057605);
 }
+
 ReactDOM.render(<App />, document.getElementById('root'));
