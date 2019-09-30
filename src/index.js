@@ -19,6 +19,10 @@ const config = {
     autoCenter: Phaser.Scale.CENTER_HORIZONTALLY
   }
 };
+const gridDimensions = {
+  singleSquareLength: 60,
+  gridRows: 6
+}
 const game = new Phaser.Game(config);
 function preload() {
   // this.load.image('splash', splashImg);
@@ -33,19 +37,28 @@ function preload() {
   });
 }
 function create() {
-  this.add.text(200 - 320 / 2, 0, 'Your Ships', {
+  this.add.text(200 - 360 / 2, 0, 'Your Ships', {
     font: '24pt "Inconsolata"',
     fill: 'green'
   });
-  this.add.text(600 - 320 / 2, 0, 'Opponent', {
+  this.add.text(650 - 360 / 2, 0, 'Opponent', {
     font: '24pt "Inconsolata"',
     fill: 'green'
   });
 
-  const playerBoard = this.add.grid(200, 200, 320, 320, 40, 40, 0x057605);
-  const opponentBoard = this.add.grid(600, 200, 320, 320, 40, 40, 0x057605);
+  const boardLength = gridDimensions.gridRows * gridDimensions.singleSquareLength;
+  const playerBoard = this.add.grid(200, 230, boardLength, boardLength, gridDimensions.singleSquareLength, gridDimensions.singleSquareLength, 0x057605);
+  const opponentBoard = this.add.grid(650, 230, boardLength, boardLength, gridDimensions.singleSquareLength, gridDimensions.singleSquareLength, 0x057605);
 
-  const boat = this.add.sprite(100, 200, 'greenBoat');
+  const boat = this.add.sprite(46, 230, 'greenBoat');
+  boat.rotation = Math.PI / 2; // rotate 90 degrees
+  Phaser.Actions.GridAlign(boat, {
+    cellWidth: 32,
+    cellHeight: 32,
+    x: 100,
+    y: 100
+  });
+
   var config = {
     key: 'explode',
     frames: this.anims.generateFrameNumbers('boom', {
@@ -62,5 +75,18 @@ function create() {
 
   boom.anims.play('explode');
 }
+
+let playerOneShips = [
+  { x: 5, y: 4, size: 2, hits: 0, horizontal: false },
+  { x: 5, y: 4, size: 2, hits: 0, horizontal: true },
+  { x: 5, y: 4, size: 2, hits: 0, horizontal: true },
+  { x: 5, y: 4, size: 2, hits: 0, horizontal: false },
+  { x: 5, y: 4, size: 2, hits: 0, horizontal: false }
+];
+
+
+const renderShips = function(shipsArray) {
+  shipsArray.foreach();
+};
 
 ReactDOM.render(<App />, document.getElementById('root'));
