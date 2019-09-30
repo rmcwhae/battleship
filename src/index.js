@@ -100,12 +100,7 @@ function create() {
 
 const renderShips = function(game, shipsArray) {
   shipsArray.forEach(ship => {
-    game.add.sprite(50 + ship.x * gridDimensions.singleSquareLength, 110 + ship.y * gridDimensions.singleSquareLength, 'greenBoat')
-    if (ship.horizontal) {
-      console.log(ship);
-      ship.angle = 90;
-      ship.y -= gridDimensions.singleSquareLength / 2 
-  }
+    game.add.sprite(50 + ship.x * gridDimensions.singleSquareLength, 110 + ship.y * gridDimensions.singleSquareLength, 'greenBoat');
   });
 };
 
