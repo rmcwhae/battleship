@@ -2,27 +2,23 @@ import * as React from 'react';
 import Game from './Game';
 // import App from './App.jsx';
 
-class GameContainer extends React.Component {
-  // game;
 
-  constructor(props) {
-    super(props);
-    this.state = props.state;
-    this.setState = props.setState;
-    console.log("Conatiner constructor", props);
-  }
+export default function GameContainer(props) {
+  console.log("Game Container's create Game has", props.state.count, "clicks");
 
-  componentDidMount() {
-    console.log("Game Container's create Game has", this.state.count, "clicks");
-    new Game({state: this.state, setState: this.setState});
+  const [game, setGame] = React.useState();
+  React.useEffect(() => {
+    setGame(new Game({state: props.state, setState: props.setState}));
+  }, [])
+
+  React.useEffect(() => {
+    console.log("Game is now ->", typeof game, game);
+    game && game.setProps(props);
+  }, [props.state]);
+
     console.log("Game Container's render");
-  }
 
-  render() {
-    return (
-      <section className="phaser-container" id="battleship" />
-    );
-  }
+  return (
+    <section className="phaser-container" id="battleship" />
+  );
 }
-
-export default GameContainer;

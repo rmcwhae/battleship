@@ -6,15 +6,15 @@ import buttonImg from '../assets/download.png';
 export default class BootScene extends Phaser.Scene {
   constructor (props) {
     super('Boot');
-    this.state = props.state;
-    this.setState = props.setState;
-    console.log("In Boot scene", props);
+    // this.state = props.state;
+    // this.setState = props.setState;
   }
  
-  set props(props) {
-    this.state = props.state;
-    this.setState = props.setState;
-  }
+  // set props(props) {
+  //   this.state = props.state;
+  //   this.setState = props.setState;
+  // }
+
   preload() {
     this.load.image('logo', logoImg);
     this.load.image('button', buttonImg );
@@ -37,8 +37,8 @@ export default class BootScene extends Phaser.Scene {
 
     logo.setInteractive({ useHandCursor: true });
     logo.on("pointerup", () => {
-      console.log("Hello, there is ", this.state);
-      this.setState({count: 10})
+      console.log("Bootscene ", this.game.state.count);
+      this.game.setState({count: this.game.state.count - 1});
     });
 
     console.log("Created the phaser");
