@@ -51,7 +51,11 @@ function create() {
   const opponentBoard = this.add.grid(650, 230, boardLength, boardLength, gridDimensions.singleSquareLength, gridDimensions.singleSquareLength, 0x057605);
 
   const boat = this.add.sprite(46, 230, 'greenBoat');
+  
   boat.rotation = Math.PI / 2; // rotate 90 degrees
+  boat.x += gridDimensions.singleSquareLength / 2;
+  boat.y -= gridDimensions.singleSquareLength / 2;
+
   Phaser.Actions.GridAlign(boat, {
     cellWidth: 32,
     cellHeight: 32,
