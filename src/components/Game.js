@@ -3,9 +3,13 @@ import BootScene from '../scenes/BootScene';
 
 const config = {
   type: Phaser.AUTO,
-  parent: 'battleship',
-  width: 800,
+  parent: 'phaser-example',
+  width: 850,
   height: 600,
+  scale: {
+    // mode: Phaser.Scale.FIT,
+    autoCenter: Phaser.Scale.CENTER_HORIZONTALLY
+  }
 };
 
 export default class Game extends Phaser.Game {
