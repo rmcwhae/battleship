@@ -59,27 +59,6 @@ export default class BootScene extends Phaser.Scene {
     });
   }
 
-  //   create() {
-  //     const logo = this.add.image(400, 150, 'logo');
-  //     this.tweens.add({
-  //       targets: logo,
-  //       y: 450,
-  //       duration: 2000,
-  //       ease: 'Power2',
-  //       yoyo: true,
-  //       loop: -1
-  //     });
-
-  //     logo.setInteractive({ useHandCursor: true });
-  //     logo.on("pointerup", () => {
-  //       console.log("Bootscene ", this.game.state.count);
-  //       this.game.setState({count: this.game.state.count - 1});
-  //     });
-
-  //     console.log("Created the phaser");
-
-  // }
-
   create() {
     const leftTitle = this.add.text(200 - 360 / 2, 0, 'Your Ships', {
       font: '24pt "Inconsolata"',
@@ -139,6 +118,9 @@ export default class BootScene extends Phaser.Scene {
     };
 
     this.anims.create(config);
+
+    // this.input.onDown.add(this.clickHandler, this);
+    // try to get a console.log like 'you clicked A3'
 
     this.explode(this, 'playerBoard', 'a', 1);
     this.explode(this, 'playerBoard', 'a', 2);
