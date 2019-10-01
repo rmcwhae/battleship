@@ -22,7 +22,8 @@ const config = {
 const gridDimensions = {
   singleSquareLength: 60,
   gridRows: 6
-} // e.g. we have a <gridRows> x <gridRows> square grid where each square has a width and height of <singleSquareLength>
+}; // e.g. we have a <gridRows> x <gridRows> square grid where each square has a width and height of <singleSquareLength>
+let boats = {};
 const game = new Phaser.Game(config);
 function preload() {
   // this.load.image('splash', splashImg);
@@ -46,20 +47,27 @@ function create() {
     fill: 'green'
   });
 
-  const boardLength = gridDimensions.gridRows * gridDimensions.singleSquareLength;
-  const playerBoard = this.add.grid(200, 230, boardLength, boardLength, gridDimensions.singleSquareLength, gridDimensions.singleSquareLength, 0x057605);
-  const opponentBoard = this.add.grid(650, 230, boardLength, boardLength, gridDimensions.singleSquareLength, gridDimensions.singleSquareLength, 0x057605);
+  const boardLength =
+    gridDimensions.gridRows * gridDimensions.singleSquareLength;
+  const playerBoard = this.add.grid(
+    200,
+    230,
+    boardLength,
+    boardLength,
+    gridDimensions.singleSquareLength,
+    gridDimensions.singleSquareLength,
+    0x057605
+  );
+  const opponentBoard = this.add.grid(
+    650,
+    230,
+    boardLength,
+    boardLength,
+    gridDimensions.singleSquareLength,
+    gridDimensions.singleSquareLength,
+    0x057605
+  );
 
-  let boat1, boat2, boat3, boat4, boat5;
-  // const boat3 = this.add.sprite(46, 230, 'greenBoat');
-  // const boat4 = this.add.sprite(46, 230, 'greenBoat');
-  // const boat5 = this.add.sprite(46, 230, 'greenBoat');
-  // boat1 = this.add.sprite(206, 230, 'greenBoat');
-  // boat2 = this.add.sprite(46, 230, 'greenBoat');
-  
-  // boat1.rotation = Math.PI / 2; // rotate 90 degrees
-  // boat1.angle = 90;
-  // boat1.y -= gridDimensions.singleSquareLength / 2;
 
   let playerOneShips = [
     { x: 0, y: 0, size: 2, hits: 0, horizontal: false },
@@ -97,10 +105,18 @@ function create() {
   boom.anims.play('explode');
 }
 
-
 const renderShips = function(game, shipsArray) {
-  shipsArray.forEach(ship => {
-    game.add.sprite(50 + ship.x * gridDimensions.singleSquareLength, 110 + ship.y * gridDimensions.singleSquareLength, 'greenBoat');
+  shipsArray.forEach((ship, index) => {
+    boats[index] = game.add.sprite(
+      50 + ship.x * gridDimensions.singleSquareLength,
+      110 + ship.y * gridDimensions.singleSquareLength,
+      'greenBoat'
+    );
+    if (ship.horizontal) {
+      boats[index].angle = 90;
+      boats[index].y -= gridDimensions.singleSquareLength / 2;
+      boats[index].x -= gridDimensions.singleSquareLength / 2;
+    }
   });
 };
 
