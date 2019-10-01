@@ -73,10 +73,15 @@ export default class BootScene extends Phaser.Scene {
   // }
 
   create() {
-    this.add.text(200 - 360 / 2, 0, 'Your Ships', {
+    const leftTitle = this.add.text(200 - 360 / 2, 0, 'Your Ships', {
       font: '24pt "Inconsolata"',
       fill: 'green'
     });
+    leftTitle.setInteractive({ useHandCursor: true });
+    leftTitle.on("pointerup", () => {
+          console.log("Bootscene ", this.game.state.count);
+          this.game.setState({count: this.game.state.count - 1});
+        });
     this.add.text(650 - 360 / 2, 0, 'Opponent', {
       font: '24pt "Inconsolata"',
       fill: 'green'
