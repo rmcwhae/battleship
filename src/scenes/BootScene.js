@@ -1,5 +1,4 @@
 import 'phaser';
-import logoImg from '../assets/logo.png';
 import greenBoatImg from '../assets/green_battleship_sprite.png';
 import explosionImg from '../assets/explosion.png';
 
@@ -19,7 +18,7 @@ const rowNumbers = {
   f: 6
 };
 
-let spotsOccupied = {
+let playerSpotsOccupied = {
   a: [0, 0, 0, 0, 0, 0],
   b: [0, 0, 0, 0, 0, 0],
   c: [0, 0, 0, 0, 0, 0],
@@ -27,6 +26,16 @@ let spotsOccupied = {
   e: [0, 0, 0, 0, 0, 0],
   f: [0, 0, 0, 0, 0, 0]
 };
+
+let opponentSpotsOccupied = {
+  a: [0, 0, 0, 0, 0, 0],
+  b: [0, 0, 0, 0, 0, 0],
+  c: [0, 0, 0, 0, 0, 0],
+  d: [0, 0, 0, 0, 0, 0],
+  e: [0, 0, 0, 0, 0, 0],
+  f: [0, 0, 0, 0, 0, 0]
+};
+
 export default class BootScene extends Phaser.Scene {
   constructor(props) {
     super('Boot');
@@ -36,7 +45,6 @@ export default class BootScene extends Phaser.Scene {
   //   this.state = props.state;
   //   this.setState = props.setState;
   // }
-
 
   preload() {
     // this.load.image('splash', splashImg);
@@ -78,11 +86,11 @@ export default class BootScene extends Phaser.Scene {
       fill: 'green'
     });
     leftTitle.setInteractive({ useHandCursor: true });
-    leftTitle.on("pointerup", () => {
-          console.log("Bootscene ", this.game.state.count);
-          this.game.setState({count: this.game.state.count - 1});
-        });
-    this.add.text(650 - 360 / 2, 0, 'Opponent', {
+    leftTitle.on('pointerup', () => {
+      console.log('Bootscene ', this.game.state.count);
+      this.game.setState({ count: this.game.state.count - 1 });
+    });
+    const rightTitle = this.add.text(650 - 360 / 2, 0, 'Opponent', {
       font: '24pt "Inconsolata"',
       fill: 'green'
     });
@@ -108,8 +116,8 @@ export default class BootScene extends Phaser.Scene {
       0x057605
     );
 
-    let playerOneShips = this.distributeShips();
-    let playerTwoShips = this.distributeShips();
+    let playerOneShips = this.distributeShips(playerSpotsOccupied);
+    let playerTwoShips = this.distributeShips(opponentSpotsOccupied);
     playerTwoShips[0].sunk = true;
     playerTwoShips[1].sunk = true;
     playerTwoShips[2].sunk = true;
@@ -183,7 +191,7 @@ export default class BootScene extends Phaser.Scene {
     boom.anims.play('explode');
   };
 
-  distributeShips = function() {
+  distributeShips = function(spotsOccupiedObj) {
     let shipsArray = [];
 
     while (shipsArray.length < 5) {
@@ -202,10 +210,10 @@ export default class BootScene extends Phaser.Scene {
         sunk: false,
         horizontal: Math.random() >= 0.5 // true or false
       };
-      if (this.ShipLocationIsValid(ship, spotsOccupied)) {
+      if (this.ShipLocationIsValid(ship, spotsOccupiedObj)) {
         // now verify that the proposed location is in fact valid, AND NOT OVERLAPPING EXISTING SHIP!
         shipsArray.push(ship);
-        this.occupySpots(ship, spotsOccupied);
+        this.occupySpots(ship, spotsOccupiedObj);
       }
     }
     return shipsArray;
