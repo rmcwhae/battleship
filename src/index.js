@@ -99,15 +99,6 @@ function create() {
 
   renderShips(this, 'opponentBoard', playerTwoShips);
 
-  // Phaser.Actions.GridAlign([boat1, boat2], {
-  //   width: gridDimensions.gridRows,
-  //   height: gridDimensions.gridRows,
-  //   cellWidth: gridDimensions.singleSquareLength,
-  //   cellHeight: gridDimensions.singleSquareLength,
-  //   x: 100,
-  //   y: 100
-  // });
-
   var config = {
     key: 'explode',
     frames: this.anims.generateFrameNumbers('boom', {
@@ -140,9 +131,8 @@ const renderShips = function(game, board, shipsArray) {
   if (board === 'playerBoard') {
     adjustmentx = -10;
   }
-  // filter for only non-sunk ships…
+  // filter for only non-sunk ships? …
   shipsArray.forEach((ship, index) => {
-    // if (ship.sunk) frame = 3;
     boats[index] = game.add.sprite(
       ship.col * gridDimensions.singleSquareLength + adjustmentx,
       rowNumbers[ship.row] * gridDimensions.singleSquareLength + adjustmenty,
