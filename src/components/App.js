@@ -2,7 +2,8 @@ import React, { useEffect, useReducer, useState } from "react";
 import 'phaser';
 import { getGame } from './Game';
 import GameContainer from './GameContainer';
-import reducer, { INCREASE, DECREASE } from "../reducers/gameReducers";
+import config from '../config';
+console.log("Config", config);
 
 export default function App() {
 // export default class App extends React.Component {

@@ -1,7 +1,7 @@
 {
-  "name": "phaser3-project-template",
-  "version": "1.1.0",
-  "description": "A Phaser 3 Project Template",
+  "name": "battleship",
+  "version": "1.0.0",
+  "description": "Phaser + React project",
   "main": "src/index.js",
   "scripts": {
     "build": "webpack --config webpack/prod.js ",
@@ -11,7 +11,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/photonstorm/phaser3-project-template.git"
+    "url": "git+https://github.com/rmcwhae/battleship.git"
   },
   "author": "Taylor Nodell and Richard Davey <rmoved for privacy> (http://www.photonstorm.com)",
   "license": "MIT",
