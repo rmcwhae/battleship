@@ -80,7 +80,6 @@ function create() {
     0x057605
   );
 
-
   let playerOneShips = [
     { row: 'a', col: 1, size: 2, hits: 0, horizontal: false },
     { row: 'b', col: 3, size: 2, hits: 0, horizontal: true },
@@ -112,12 +111,17 @@ function create() {
 
   this.anims.create(config);
 
-  explode(this, 'a', 1);
-  explode(this, 'b', 2);
-  explode(this, 'c', 3);
-  explode(this, 'd', 4);
-  explode(this, 'e', 5);
-  explode(this, 'f', 6);
+  explode(this, 'playerBoard', 'a', 1);
+  explode(this, 'playerBoard', 'a', 2);
+  explode(this, 'playerBoard', 'b', 2);
+  explode(this, 'playerBoard', 'c', 3);
+  explode(this, 'playerBoard', 'd', 4);
+  explode(this, 'playerBoard', 'e', 5);
+  explode(this, 'playerBoard', 'f', 6);
+
+  explode(this, 'opponentBoard', 'd', 4);
+  explode(this, 'opponentBoard', 'e', 5);
+  explode(this, 'opponentBoard', 'f', 6);
 }
 
 const renderShips = function(game, shipsArray) {
@@ -135,11 +139,19 @@ const renderShips = function(game, shipsArray) {
   });
 };
 
-const explode = function(game, row, col) {
-  const xcoord = gridDimensions.singleSquareLength * col - 10;
-  const ycoord = 20 + gridDimensions.singleSquareLength * rowNumbers[row];
+const explode = function(game, board, row, col) {
+  let adjustmentx, adjustmenty;
+  if (board === 'playerBoard') {
+    adjustmentx = -10;
+    adjustmenty = 20;
+  } else {
+    adjustmentx = 440;
+    adjustmenty = 20;
+  }
+  const xcoord = gridDimensions.singleSquareLength * col + adjustmentx;
+  const ycoord = gridDimensions.singleSquareLength * rowNumbers[row] +adjustmenty;
   const boom = game.add.sprite(xcoord, ycoord, 'boom');
   boom.anims.play('explode');
-}
+};
 
 ReactDOM.render(<App />, document.getElementById('root'));
