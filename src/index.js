@@ -8,7 +8,7 @@ import App from './components/App.jsx';
 const config = {
   type: Phaser.AUTO,
   parent: 'phaser-example',
-  width: 1000,
+  width: 850,
   height: 600,
   scene: {
     preload: preload,
@@ -87,8 +87,15 @@ function create() {
     { row: 'c', col: 5, size: 2, hits: 0, horizontal: true },
     { row: 'f', col: 4, size: 2, hits: 0, horizontal: true }
   ];
+  let playerTwoShips = [
+    { row: 'a', col: 1, size: 2, hits: 2, horizontal: false },
+    { row: 'b', col: 3, size: 2, hits: 0, horizontal: true },
+    { row: 'f', col: 4, size: 2, hits: 2, horizontal: true }
+  ];
 
-  renderShips(this, playerOneShips);
+  renderShips(this, 'playerBoard', playerOneShips);
+
+  renderShips(this, 'opponentBoard', playerTwoShips);
 
   // Phaser.Actions.GridAlign([boat1, boat2], {
   //   width: gridDimensions.gridRows,
@@ -124,11 +131,16 @@ function create() {
   explode(this, 'opponentBoard', 'f', 6);
 }
 
-const renderShips = function(game, shipsArray) {
+const renderShips = function(game, board, shipsArray) {
+  let adjustmentx = 440;
+  let adjustmenty = 50;
+  if (board === 'playerBoard') {
+    adjustmentx = -10;
+  }
   shipsArray.forEach((ship, index) => {
     boats[index] = game.add.sprite(
-      ship.col * gridDimensions.singleSquareLength - 10,
-      rowNumbers[ship.row] * gridDimensions.singleSquareLength + 50,
+      ship.col * gridDimensions.singleSquareLength + adjustmentx,
+      rowNumbers[ship.row] * gridDimensions.singleSquareLength + adjustmenty,
       'greenBoat'
     );
     if (ship.horizontal) {
@@ -140,13 +152,10 @@ const renderShips = function(game, shipsArray) {
 };
 
 const explode = function(game, board, row, col) {
-  let adjustmentx, adjustmenty;
+  let adjustmentx = 440;
+  let adjustmenty = 20;
   if (board === 'playerBoard') {
     adjustmentx = -10;
-    adjustmenty = 20;
-  } else {
-    adjustmentx = 440;
-    adjustmenty = 20;
   }
   const xcoord = gridDimensions.singleSquareLength * col + adjustmentx;
   const ycoord = gridDimensions.singleSquareLength * rowNumbers[row] +adjustmenty;
