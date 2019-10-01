@@ -1,20 +1,19 @@
 {
-  "name": "phaser3-project-template",
-  "version": "1.1.0",
-  "description": "A Phaser 3 Project Template",
+  "name": "battleship",
+  "version": "1.0.0",
+  "description": "Phaser + React project",
   "main": "src/index.js",
   "scripts": {
     "build": "webpack --config webpack/prod.js ",
     "start": "node server.js",
-    "heroku-postbuild": "webpack --config webpack/prod.js ",
     "dev": "webpack-dev-server --config webpack/base.js --open",
     "test": "jest"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/photonstorm/phaser3-project-template.git"
+    "url": "git+https://github.com/rmcwhae/battleship.git"
   },
-  "author": "Taylor Nodell and Richard Davey <rdavey@gmail.com> (http://www.photonstorm.com)",
+  "author": "Taylor Nodell and Richard Davey <rmoved for privacy> (http://www.photonstorm.com)",
   "license": "MIT",
   "licenseUrl": "http://www.opensource.org/licenses/mit-license.php",
   "bugs": {
@@ -56,7 +55,8 @@
     "redux": "^4.0.1",
     "redux-thunk": "^2.3.0",
     "style-loader": "^1.0.0",
-    "styled-components": "^4.4.0"
+    "styled-components": "^4.4.0",
+    "socket.io-client": "^2.3.0"
   },
   "jest": {
     "transform": {
