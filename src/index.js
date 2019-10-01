@@ -81,16 +81,18 @@ function create() {
   );
 
   let playerOneShips = [
-    { row: 'a', col: 1, size: 2, hits: 0, horizontal: false },
-    { row: 'b', col: 3, size: 2, hits: 0, horizontal: true },
-    { row: 'c', col: 1, size: 2, hits: 0, horizontal: false },
-    { row: 'c', col: 5, size: 2, hits: 0, horizontal: true },
-    { row: 'f', col: 4, size: 2, hits: 0, horizontal: true }
+    { row: 'a', col: 1, size: 2, sunk: false, horizontal: false },
+    { row: 'b', col: 3, size: 2, sunk: false, horizontal: true },
+    { row: 'c', col: 1, size: 2, sunk: false, horizontal: false },
+    { row: 'c', col: 5, size: 2, sunk: false, horizontal: true },
+    { row: 'f', col: 4, size: 2, sunk: false, horizontal: true }
   ];
   let playerTwoShips = [
-    { row: 'a', col: 1, size: 2, hits: 2, horizontal: false },
-    { row: 'b', col: 3, size: 2, hits: 0, horizontal: true },
-    { row: 'f', col: 4, size: 2, hits: 2, horizontal: true }
+    { row: 'a', col: 1, size: 2, sunk: true, horizontal: false },
+    { row: 'b', col: 3, size: 2, sunk: false, horizontal: true },
+    { row: 'f', col: 1, size: 2, sunk: true, horizontal: true },
+    { row: 'c', col: 5, size: 2, sunk: false, horizontal: false },
+    { row: 'f', col: 4, size: 2, sunk: true, horizontal: true }
   ];
 
   renderShips(this, 'playerBoard', playerOneShips);
@@ -132,16 +134,20 @@ function create() {
 }
 
 const renderShips = function(game, board, shipsArray) {
-  let adjustmentx = 440;
+  let adjustmentx = 440; // hardcoded to align with opponent board
   let adjustmenty = 50;
+  let frame = 0;
   if (board === 'playerBoard') {
     adjustmentx = -10;
   }
+  // filter for only non-sunk ships…
   shipsArray.forEach((ship, index) => {
+    // if (ship.sunk) frame = 3;
     boats[index] = game.add.sprite(
       ship.col * gridDimensions.singleSquareLength + adjustmentx,
       rowNumbers[ship.row] * gridDimensions.singleSquareLength + adjustmenty,
-      'greenBoat'
+      'greenBoat',
+      ship.sunk ? frame = 3 : frame = 0
     );
     if (ship.horizontal) {
       boats[index].angle = 90;
@@ -158,7 +164,8 @@ const explode = function(game, board, row, col) {
     adjustmentx = -10;
   }
   const xcoord = gridDimensions.singleSquareLength * col + adjustmentx;
-  const ycoord = gridDimensions.singleSquareLength * rowNumbers[row] +adjustmenty;
+  const ycoord =
+    gridDimensions.singleSquareLength * rowNumbers[row] + adjustmenty;
   const boom = game.add.sprite(xcoord, ycoord, 'boom');
   boom.anims.play('explode');
 };
