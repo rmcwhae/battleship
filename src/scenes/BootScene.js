@@ -120,13 +120,13 @@ export default class BootScene extends Phaser.Scene {
     let playerTwoShips = this.distributeShips(opponentSpotsOccupied);
     playerTwoShips[0].sunk = true;
     playerTwoShips[1].sunk = true;
-    playerTwoShips[2].sunk = true;
-    playerTwoShips[3].sunk = true;
+    playerTwoShips[2].sunk = false;
+    playerTwoShips[3].sunk = false;
     playerTwoShips[4].sunk = true;
 
-    this.renderShips(this, 'playerBoard', playerOneShips);
+    this.renderShips(this, 'playerBoard', playerOneShips, false);
 
-    this.renderShips(this, 'opponentBoard', playerTwoShips);
+    this.renderShips(this, 'opponentBoard', playerTwoShips, true);
 
     var config = {
       key: 'explode',
@@ -155,14 +155,18 @@ export default class BootScene extends Phaser.Scene {
 
   // }
 
-  renderShips = function(game, board, shipsArray) {
+  renderShips = function(game, board, shipsArray, onlySunk) {
     let adjustmentx = 440; // hardcoded to align with opponent board
     let adjustmenty = 50;
     let frame = 0;
     if (board === 'playerBoard') {
       adjustmentx = -10;
     }
-    // filter for only non-sunk ships? …
+    // filter for only non-sunk ships if onlySunk flag tripped
+    if (onlySunk) {
+      shipsArray = shipsArray.filter(ship => ship.sunk === true);
+    }
+    // now display them
     shipsArray.forEach((ship, index) => {
       boats[index] = game.add.sprite(
         ship.col * gridDimensions.singleSquareLength + adjustmentx,
