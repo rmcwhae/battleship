@@ -19,11 +19,23 @@ const config = {
     autoCenter: Phaser.Scale.CENTER_HORIZONTALLY
   }
 };
+
 const gridDimensions = {
   singleSquareLength: 60,
   gridRows: 6
 }; // e.g. we have a <gridRows> x <gridRows> square grid where each square has a width and height of <singleSquareLength>
+
 let boats = {};
+
+const rowNumbers = {
+  a: 1,
+  b: 2,
+  c: 3,
+  d: 4,
+  e: 5,
+  f: 6
+};
+
 const game = new Phaser.Game(config);
 function preload() {
   // this.load.image('splash', splashImg);
@@ -70,11 +82,11 @@ function create() {
 
 
   let playerOneShips = [
-    { x: 0, y: 0, size: 2, hits: 0, horizontal: false },
-    { x: 5, y: 4, size: 2, hits: 0, horizontal: true },
-    { x: 2, y: 3, size: 2, hits: 0, horizontal: true },
-    { x: 4, y: 1, size: 2, hits: 0, horizontal: false },
-    { x: 2, y: 5, size: 2, hits: 0, horizontal: true }
+    { row: 'a', col: 1, size: 2, hits: 0, horizontal: false },
+    { row: 'b', col: 3, size: 2, hits: 0, horizontal: true },
+    { row: 'c', col: 1, size: 2, hits: 0, horizontal: false },
+    { row: 'c', col: 5, size: 2, hits: 0, horizontal: true },
+    { row: 'f', col: 4, size: 2, hits: 0, horizontal: true }
   ];
 
   renderShips(this, playerOneShips);
@@ -100,24 +112,34 @@ function create() {
 
   this.anims.create(config);
 
-  const boom = this.add.sprite(100, 300, 'boom');
-
-  boom.anims.play('explode');
+  explode(this, 'a', 1);
+  explode(this, 'b', 2);
+  explode(this, 'c', 3);
+  explode(this, 'd', 4);
+  explode(this, 'e', 5);
+  explode(this, 'f', 6);
 }
 
 const renderShips = function(game, shipsArray) {
   shipsArray.forEach((ship, index) => {
     boats[index] = game.add.sprite(
-      50 + ship.x * gridDimensions.singleSquareLength,
-      110 + ship.y * gridDimensions.singleSquareLength,
+      ship.col * gridDimensions.singleSquareLength - 10,
+      rowNumbers[ship.row] * gridDimensions.singleSquareLength + 50,
       'greenBoat'
     );
     if (ship.horizontal) {
       boats[index].angle = 90;
+      boats[index].x += gridDimensions.singleSquareLength / 2;
       boats[index].y -= gridDimensions.singleSquareLength / 2;
-      boats[index].x -= gridDimensions.singleSquareLength / 2;
     }
   });
 };
+
+const explode = function(game, row, col) {
+  const xcoord = gridDimensions.singleSquareLength * col - 10;
+  const ycoord = 20 + gridDimensions.singleSquareLength * rowNumbers[row];
+  const boom = game.add.sprite(xcoord, ycoord, 'boom');
+  boom.anims.play('explode');
+}
 
 ReactDOM.render(<App />, document.getElementById('root'));
