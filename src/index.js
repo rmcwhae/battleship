@@ -36,6 +36,15 @@ const rowNumbers = {
   f: 6
 };
 
+let spotsOccupied = {
+  a: [0, 0, 0, 0, 0, 0],
+  b: [0, 0, 0, 0, 0, 0],
+  c: [0, 0, 0, 0, 0, 0],
+  d: [0, 0, 0, 0, 0, 0],
+  e: [0, 0, 0, 0, 0, 0],
+  f: [0, 0, 0, 0, 0, 0]
+};
+
 const game = new Phaser.Game(config);
 function preload() {
   // this.load.image('splash', splashImg);
@@ -158,7 +167,8 @@ const distributeShips = function() {
   let shipsArray = [];
 
   while (shipsArray.length < 5) {
-    let ship = { // assign random spot
+    let ship = {
+      // assign random spot
       row: Object.keys(rowNumbers)[
         Math.floor(Math.random() * Object.keys(rowNumbers).length)
       ],
@@ -172,22 +182,55 @@ const distributeShips = function() {
       sunk: false,
       horizontal: Math.random() >= 0.5 // true or false
     };
-    if (ShipLocationIsValid(ship)) { // now verify that the proposed location is in fact valid, AND NOT OVERLAPPING EXISTING SHIP!
+    if (ShipLocationIsValid(ship, spotsOccupied)) {
+      // now verify that the proposed location is in fact valid, AND NOT OVERLAPPING EXISTING SHIP!
       shipsArray.push(ship);
+      occupySpots(ship, spotsOccupied);
     }
   }
   return shipsArray;
 };
 
-const ShipLocationIsValid = function(ship) {
+const ShipLocationIsValid = function(ship, spotsOccupiedObj) {
   if (ship.col === 6 && ship.horizontal === true) {
     return false;
   }
-  // ships cannot start in 6th row and be vertical
+  // ship cannot start in 6th row and be vertical
   if (ship.row === 'f' && ship.horizontal === false) {
     return false;
   }
+  if (ship.horizontal) {
+    if (
+      spotsOccupiedObj[ship.row][ship.col - 1] === 1 ||
+      spotsOccupiedObj[ship.row][ship.col] === 1
+    ) {
+      return false; // ship cannot overlap an existing boat
+    }
+  } else {
+    // ship is vertical
+    if (
+      spotsOccupiedObj[ship.row][ship.col - 1] === 1 ||
+      spotsOccupiedObj[nextChar(ship.row)][ship.col - 1] === 1
+    ) {
+      return false; // ship cannot overlap an existing boat
+    }
+  }
   return true;
+};
+
+const occupySpots = function(ship, spotsOccupiedObj) {
+  if (ship.horizontal) {
+    spotsOccupiedObj[ship.row][ship.col - 1] = 1;
+    spotsOccupiedObj[ship.row][ship.col] = 1;
+  } else {
+    //if ship is vertical
+    spotsOccupiedObj[ship.row][ship.col - 1] = 1;
+    spotsOccupiedObj[nextChar(ship.row)][ship.col - 1] = 1;
+  }
+};
+
+const nextChar = function(c) {
+  return String.fromCharCode(c.charCodeAt(0) + 1);
 };
 
 ReactDOM.render(<App />, document.getElementById('root'));
