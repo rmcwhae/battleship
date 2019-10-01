@@ -90,13 +90,12 @@ function create() {
   );
 
   let playerOneShips = distributeShips();
-  let playerTwoShips = [
-    { row: 'a', col: 1, size: 2, sunk: true, horizontal: false },
-    { row: 'b', col: 3, size: 2, sunk: false, horizontal: true },
-    { row: 'f', col: 1, size: 2, sunk: true, horizontal: true },
-    { row: 'c', col: 5, size: 2, sunk: false, horizontal: false },
-    { row: 'f', col: 4, size: 2, sunk: true, horizontal: true }
-  ];
+  let playerTwoShips = distributeShips();
+  playerTwoShips[0].sunk = true;
+  playerTwoShips[1].sunk = true;
+  playerTwoShips[2].sunk = true;
+  playerTwoShips[3].sunk = true;
+  playerTwoShips[4].sunk = true;
 
   renderShips(this, 'playerBoard', playerOneShips);
 
