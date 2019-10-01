@@ -1,6 +1,6 @@
 export default {
   API_PATH: {
-    development: 'localhost:8080',
-    production: 'fhgjkjjhg'
+    development: 'localhost:8001',
+    production: 'https://battleship-lhl.herokuapp.com/'
   }[process.env.NODE_ENV || 'development']
 }
