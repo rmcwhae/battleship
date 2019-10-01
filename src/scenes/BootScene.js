@@ -1,5 +1,6 @@
 import 'phaser';
 import greenBoatImg from '../assets/green_battleship_sprite.png';
+import waterImg from '../assets/battleship_sprite_water.png';
 import explosionImg from '../assets/explosion.png';
 
 const gridDimensions = {
@@ -57,6 +58,10 @@ export default class BootScene extends Phaser.Scene {
       frameHeight: 64,
       endFrame: 23
     });
+    this.load.spritesheet('water', waterImg, {
+      frameWidth: 60,
+      frameHeight: 60
+    });
   }
 
   create() {
@@ -76,24 +81,29 @@ export default class BootScene extends Phaser.Scene {
 
     const boardLength =
       gridDimensions.gridRows * gridDimensions.singleSquareLength;
-    const playerBoard = this.add.grid(
-      200,
-      230,
-      boardLength,
-      boardLength,
-      gridDimensions.singleSquareLength,
-      gridDimensions.singleSquareLength,
-      0x057605
-    );
-    const opponentBoard = this.add.grid(
-      650,
-      230,
-      boardLength,
-      boardLength,
-      gridDimensions.singleSquareLength,
-      gridDimensions.singleSquareLength,
-      0x057605
-    );
+
+    // const playerBoard = this.add.grid(
+    //   200,
+    //   230,
+    //   boardLength,
+    //   boardLength,
+    //   gridDimensions.singleSquareLength,
+    //   gridDimensions.singleSquareLength,
+    //   0x057605
+    // );
+
+    const playerBoard = this.displayGrid(50, 80);
+    const opponentBoard = this.displayGrid(500, 80);
+
+    // const opponentBoard = this.add.grid(
+    //   650,
+    //   230,
+    //   boardLength,
+    //   boardLength,
+    //   gridDimensions.singleSquareLength,
+    //   gridDimensions.singleSquareLength,
+    //   0x057605
+    // );
 
     let playerOneShips = this.distributeShips(playerSpotsOccupied);
     let playerTwoShips = this.distributeShips(opponentSpotsOccupied);
@@ -245,5 +255,14 @@ export default class BootScene extends Phaser.Scene {
 
   nextChar = function(c) {
     return String.fromCharCode(c.charCodeAt(0) + 1);
+  };
+
+  displayGrid = function(xoffset, yoffset) {
+    for (let i = 0; i < 6; i++) {
+      for (let k = 0; k < 6; k++) {
+        let tile = this.add.sprite(60 * i + xoffset, 60 * k + yoffset, 'water');
+        // tile.anchor.setTo(0.5, 0.5);
+      }
+    }
   };
 }
