@@ -80,13 +80,7 @@ function create() {
     0x057605
   );
 
-  let playerOneShips = [
-    { row: 'a', col: 1, size: 2, sunk: false, horizontal: false },
-    { row: 'b', col: 3, size: 2, sunk: false, horizontal: true },
-    { row: 'c', col: 1, size: 2, sunk: false, horizontal: false },
-    { row: 'c', col: 5, size: 2, sunk: false, horizontal: true },
-    { row: 'f', col: 4, size: 2, sunk: false, horizontal: true }
-  ];
+  let playerOneShips = distributeShips();
   let playerTwoShips = [
     { row: 'a', col: 1, size: 2, sunk: true, horizontal: false },
     { row: 'b', col: 3, size: 2, sunk: false, horizontal: true },
@@ -137,7 +131,7 @@ const renderShips = function(game, board, shipsArray) {
       ship.col * gridDimensions.singleSquareLength + adjustmentx,
       rowNumbers[ship.row] * gridDimensions.singleSquareLength + adjustmenty,
       'greenBoat',
-      ship.sunk ? frame = 3 : frame = 0
+      ship.sunk ? (frame = 3) : (frame = 0)
     );
     if (ship.horizontal) {
       boats[index].angle = 90;
@@ -158,6 +152,42 @@ const explode = function(game, board, row, col) {
     gridDimensions.singleSquareLength * rowNumbers[row] + adjustmenty;
   const boom = game.add.sprite(xcoord, ycoord, 'boom');
   boom.anims.play('explode');
+};
+
+const distributeShips = function() {
+  let shipsArray = [];
+
+  while (shipsArray.length < 5) {
+    let ship = { // assign random spot
+      row: Object.keys(rowNumbers)[
+        Math.floor(Math.random() * Object.keys(rowNumbers).length)
+      ],
+      col:
+        rowNumbers[
+          Object.keys(rowNumbers)[
+            Math.floor(Math.random() * Object.keys(rowNumbers).length)
+          ]
+        ],
+      size: 2,
+      sunk: false,
+      horizontal: Math.random() >= 0.5 // true or false
+    };
+    if (ShipLocationIsValid(ship)) { // now verify that the proposed location is in fact valid, AND NOT OVERLAPPING EXISTING SHIP!
+      shipsArray.push(ship);
+    }
+  }
+  return shipsArray;
+};
+
+const ShipLocationIsValid = function(ship) {
+  if (ship.col === 6 && ship.horizontal === true) {
+    return false;
+  }
+  // ships cannot start in 6th row and be vertical
+  if (ship.row === 'f' && ship.horizontal === false) {
+    return false;
+  }
+  return true;
 };
 
 ReactDOM.render(<App />, document.getElementById('root'));
