@@ -11,14 +11,14 @@ const socket = io(config.API_PATH);
 export default function App() {
 
   const [appState, setApp] = useState({count: 0});
-  const [sockState, setSock] = useState('');
+  const [sockState, setSock] = useState('Initialize');
   
   // Initial setup of the socket
-  if (sockState === '') {
+  if (sockState === 'Initialize') {
     console.log('In socket.on:', socket, '@', config.API_PATH);
 
-    socket.on('connect', (data) => {  
-      console.log("Socket connected:", socket.id, "with data:", data);
+    socket.on('connect', () => {  
+      console.log("Socket connected:", socket.id, "with data:", socket);
       setSock('connected');
       socket.emit('appFeed', { board: {A: [0,0], B: [0,0]}, shot: 'A1' });
     });
@@ -38,7 +38,7 @@ export default function App() {
   return (
     <React.Fragment>
     <div style={{ textAlign: "center" }}>        
-      <h1>Hello World at {socket.id}</h1>
+      <h1>Hello World at {sockState}</h1>
       <h2>{appState.count}</h2>
       <button onClick={() => addClick()}>Click Here</button>
     </div>
