@@ -96,8 +96,8 @@ export default class BootScene extends Phaser.Scene {
     //   0x057605
     // );
 
-    const playerBoard = this.displayGrid(50, 80);
-    const opponentBoard = this.displayGrid(500, 80);
+    const playerBoard = this.displayGrid(50, 80, false);
+    const opponentBoard = this.displayGrid(500, 80, true);
 
     // const opponentBoard = this.add.grid(
     //   650,
@@ -265,20 +265,28 @@ export default class BootScene extends Phaser.Scene {
 
   onClick = function(item) {};
 
-  displayGrid = function(xoffset, yoffset) {
+  displayGrid = function(xoffset, yoffset, opponentBoard) {
     for (let i = 0; i < 6; i++) {
       for (let k = 0; k < 6; k++) {
         let tile = this.add
           .sprite(60 * i + xoffset, 60 * k + yoffset, 'water')
           .setInteractive();
-        tile.on('pointerdown', function(pointer) {
-          // console.log('clicked', i, k);
-          // console.log('clicked', getKeyByValue(rowNumbers, k + 1), i + 1);
-          // now send socket message to server…
-          console.log('inside displayGrid', this);
-        });
-        // this.explode('opponentBoard', 'd', 4);
-        // tile.anchor.setTo(0.5, 0.5);
+        if (opponentBoard) {
+          tile.on('pointerover', function(pointer) {
+            tile.setFrame(2);
+          })
+          tile.on('pointerout', function(pointer) {
+            tile.setFrame(0);
+          })
+          tile.on('pointerdown', function(pointer) {
+            // console.log('clicked', i, k);
+            console.log('clicked', getKeyByValue(rowNumbers, k + 1), i + 1);
+            // now send socket message to server…
+            // console.log('inside displayGrid', this);
+          });
+          // this.explode('opponentBoard', 'd', 4);
+          // tile.anchor.setTo(0.5, 0.5);
+        }
       }
     }
   };
