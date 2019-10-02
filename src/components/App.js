@@ -14,7 +14,7 @@ export default function App() {
     dispatch,
     add,
     gameOver,
-    socketID
+    socketID,
     sentGame,
     setContainer
   } = useApplicationData();

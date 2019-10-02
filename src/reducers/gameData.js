@@ -7,7 +7,7 @@ import sample from '../sample';
 
 const socket = io(config.API_PATH);
 
-export default function useApplicationData = () {
+export default function useApplicationData () {
 
   const [ state, dispatch ] = useReducer(reducer,
     { gameState: sample,
@@ -24,7 +24,7 @@ export default function useApplicationData = () {
         socket.on('serverFeed', feed => {
           dispatch(RECEIVED_GAME, { payload: { gameState: feed, serverState: 'RECEIVED'}});
         });  
-      }
+      })
     }, []);
   
   function sentGame(newGameState) {
