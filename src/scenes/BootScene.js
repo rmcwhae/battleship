@@ -87,31 +87,8 @@ export default class BootScene extends Phaser.Scene {
       fill: 'green'
     });
 
-    const boardLength =
-      gridDimensions.gridRows * gridDimensions.singleSquareLength;
-
-    // const playerBoard = this.add.grid(
-    //   200,
-    //   230,
-    //   boardLength,
-    //   boardLength,
-    //   gridDimensions.singleSquareLength,
-    //   gridDimensions.singleSquareLength,
-    //   0x057605
-    // );
-
     const playerBoard = this.displayGrid(50, 80, false);
     const opponentBoard = this.displayGrid(500, 80, true);
-
-    // const opponentBoard = this.add.grid(
-    //   650,
-    //   230,
-    //   boardLength,
-    //   boardLength,
-    //   gridDimensions.singleSquareLength,
-    //   gridDimensions.singleSquareLength,
-    //   0x057605
-    // );
 
     let playerOneShips = this.distributeShips(playerSpotsOccupied);
     let playerTwoShips = this.distributeShips(opponentSpotsOccupied);
