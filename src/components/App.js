@@ -10,7 +10,7 @@ import styled from 'styled-components'
 const socket = io(config.API_PATH);
 
 export default function App() {
-  const [appState, setApp] = useState({ count: 0 });
+  const [appState, setApp] = useState({ count: 0, turn: 'Your turn' });
   const [sockState, setSock] = useState('');
 
   // Initial setup of the socket
@@ -29,7 +29,7 @@ export default function App() {
   });
 
   function addClick() {
-    setApp({ count: appState.count + 1 });
+    setApp({ ...appState, count: appState.count + 1 });
     socket.emit('appFeed', { board: { A: [1, 1], B: [1, 1] }, shot: 'A1' });
     setSock('listening');
   }
@@ -48,6 +48,7 @@ export default function App() {
       <div style={{ textAlign: 'center' }}>
         <Title>Welcome to Battleship at {socket.id}</Title>
         <Title>{appState.count}</Title>
+        <Title>{appState.turn}</Title>
         <button onClick={() => addClick()}>Click Here</button>
       </div>
       <GameContainer state={appState} setState={setApp} />

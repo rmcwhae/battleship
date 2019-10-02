@@ -2,6 +2,10 @@ import 'phaser';
 import greenBoatImg from '../assets/green_battleship_sprite.png';
 import waterImg from '../assets/battleship_sprite_water.png';
 import explosionImg from '../assets/explosion.png';
+import config from '../config';
+import io from 'socket.io-client';
+
+const socket = io(config.API_PATH);
 
 const gridDimensions = {
   singleSquareLength: 60,
@@ -76,7 +80,7 @@ export default class BootScene extends Phaser.Scene {
     leftTitle.setInteractive({ useHandCursor: true });
     leftTitle.on('pointerup', () => {
       console.log('Bootscene ', this.game.state.count);
-      this.game.setState({ count: this.game.state.count - 1 });
+      this.game.setState({ ...this.game.state, count: this.game.state.count - 1 });
     });
     const rightTitle = this.add.text(650 - 360 / 2, 0, 'Opponent', {
       font: '24pt "Inconsolata"',
@@ -280,6 +284,7 @@ export default class BootScene extends Phaser.Scene {
           })
           tile.on('pointerdown', function(pointer) {
             // console.log('clicked', i, k);
+            socket.emit('shotFired', { row: getKeyByValue(rowNumbers, k + 1), col: i + 1 });
             console.log('clicked', getKeyByValue(rowNumbers, k + 1), i + 1);
             // now send socket message to server…
             // console.log('inside displayGrid', this);
