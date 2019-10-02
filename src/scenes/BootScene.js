@@ -37,6 +37,10 @@ let opponentSpotsOccupied = {
   f: [0, 0, 0, 0, 0, 0]
 };
 
+const getKeyByValue = function(object, value) {
+  return Object.keys(object).find(key => object[key] === value);
+};
+
 export default class BootScene extends Phaser.Scene {
   constructor(props) {
     super('Boot');
@@ -115,6 +119,8 @@ export default class BootScene extends Phaser.Scene {
 
     this.renderShips(this, 'playerBoard', playerOneShips, false);
 
+    // console.log('after render', this);
+
     this.renderShips(this, 'opponentBoard', playerTwoShips, true);
 
     var config = {
@@ -132,16 +138,16 @@ export default class BootScene extends Phaser.Scene {
     // this.input.onDown.add(this.clickHandler, this);
     // try to get a console.log like 'you clicked A3'
 
-    this.explode(this, 'playerBoard', 'a', 1);
-    this.explode(this, 'playerBoard', 'a', 2);
-    this.explode(this, 'playerBoard', 'b', 2);
-    this.explode(this, 'playerBoard', 'c', 3);
-    this.explode(this, 'playerBoard', 'd', 4);
-    this.explode(this, 'playerBoard', 'e', 5);
-    this.explode(this, 'playerBoard', 'f', 6);
-    this.explode(this, 'opponentBoard', 'd', 4);
-    this.explode(this, 'opponentBoard', 'e', 5);
-    this.explode(this, 'opponentBoard', 'f', 6);
+    // this.explode(this, 'playerBoard', 'a', 1);
+    // this.explode(this, 'playerBoard', 'a', 2);
+    // this.explode(this, 'playerBoard', 'b', 2);
+    // this.explode(this, 'playerBoard', 'c', 3);
+    // this.explode(this, 'playerBoard', 'd', 4);
+    // this.explode(this, 'playerBoard', 'e', 5);
+    // this.explode(this, 'playerBoard', 'f', 6);
+
+    // this.explode(this, 'opponentBoard', 'e', 5);
+    // this.explode(this, 'opponentBoard', 'f', 6);
   }
   // update() {
 
@@ -174,7 +180,7 @@ export default class BootScene extends Phaser.Scene {
     });
   };
 
-  explode = function(game, board, row, col) {
+  explode = function(board, row, col) {
     let adjustmentx = 440;
     let adjustmenty = 20;
     if (board === 'playerBoard') {
@@ -183,7 +189,7 @@ export default class BootScene extends Phaser.Scene {
     const xcoord = gridDimensions.singleSquareLength * col + adjustmentx;
     const ycoord =
       gridDimensions.singleSquareLength * rowNumbers[row] + adjustmenty;
-    const boom = game.add.sprite(xcoord, ycoord, 'boom');
+    const boom = this.add.sprite(xcoord, ycoord, 'boom');
     boom.anims.play('explode');
   };
 
@@ -257,10 +263,21 @@ export default class BootScene extends Phaser.Scene {
     return String.fromCharCode(c.charCodeAt(0) + 1);
   };
 
+  onClick = function(item) {};
+
   displayGrid = function(xoffset, yoffset) {
     for (let i = 0; i < 6; i++) {
       for (let k = 0; k < 6; k++) {
-        let tile = this.add.sprite(60 * i + xoffset, 60 * k + yoffset, 'water');
+        let tile = this.add
+          .sprite(60 * i + xoffset, 60 * k + yoffset, 'water')
+          .setInteractive();
+        tile.on('pointerdown', function(pointer) {
+          // console.log('clicked', i, k);
+          // console.log('clicked', getKeyByValue(rowNumbers, k + 1), i + 1);
+          // now send socket message to server…
+          console.log('inside displayGrid', this);
+        });
+        // this.explode('opponentBoard', 'd', 4);
         // tile.anchor.setTo(0.5, 0.5);
       }
     }
