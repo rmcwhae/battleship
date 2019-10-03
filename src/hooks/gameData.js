@@ -1,32 +1,33 @@
-import { useEffect, useReducer } from "react";
+import { useEffect, useReducer, useState } from "react";
 import reducer, { SENT_GAME, RECEIVED_GAME, CONTAINER, SERVER, INCREMENT, DECREASE, TOGGLE } from "./gameReducers";
 import io from 'socket.io-client';
 import config from '../config';
 import sample0 from '../sample0';
 import sample1 from '../sample1';
 // console.log("Config", config);
-
 const socket = io(config.API_PATH);
 let staticGame = true;
 
 export default function useApplicationData () {
-  console.log("Before initial state:", io.id, "and", socket.id);
 
+  
   const [ state, dispatch ] = useReducer(reducer,
     { gameState: sample0,
       count: 0,
       serverState: '',
-      containerState: 'SETUP'
+      containerState: 'SETUP',
     });
 
     useEffect(() => {
-      socket.on('connect', () => {  
-        dispatch({ type: SERVER, serverState: 'CONNECTED'});
+      socket.on('connect', () => {
+        dispatch({ type: SERVER, serverState: 'CONNECTED' });
 
         // Create a confirmation to server this is a player
         socket.emit('player', socket.id, function (initGameState) {
-          console.log("confirmed player:", initGameState);
-          // dispatch({ type: RECEIVED_GAME, initGameState, serverState: 'RECEIVED', containerState: 'IN_PROGRESS'});
+          if (initGameState.client === initGameState.server) {
+            console.log("confirmed player:", initGameState);
+            dispatch({ type: RECEIVED_GAME, initGameState, serverState: 'RECEIVED', containerState: 'IN_PROGRESS'});
+          }
         });
         socket.on('serverFeed', feed => {
           console.log("Received data");
@@ -40,12 +41,13 @@ export default function useApplicationData () {
     }, []);
   
   function sentGame(newGameState) {
-    if (socket.id !== undefined && state.serverState === 'RECEIVED') {
-      socket.emit('gameFeed', (req, res) => {
-        console.log("Sucessful sent", req, " and ", res);
+    console.log("Before emit to server:", socket.id, " with ",state.serverState);
+    // if (socket.id !== undefined && state.serverState === 'RECEIVED') {
+      socket.emit('gameFeed', newGameState, (feed) => {
+        console.log("Sucessful sent", feed);
         dispatch({ type: SENT_GAME, gameState: newGameState, serverState: 'SENT'});
       });
-    }
+    // }
   };
 
   function gameOver() {
@@ -54,7 +56,7 @@ export default function useApplicationData () {
   };
 
   function socketID() {
-    return socket.id;
+    return socket && socket.id;
   };
   
   function setServer(newServerState) {

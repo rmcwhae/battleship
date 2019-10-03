@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import 'phaser';
 import { getGame } from './Game';
 import GameContainer from './GameContainer';
@@ -42,7 +42,7 @@ export default function App() {
         <button onClick={() => toggle()}>Toggle Static Board</button>
         <button onClick={() => sentGame({turn: { player: 'server', row: 'a', col: '1'}})}>Difficult</button>
       </div>
-      <GameContainer state={state} setState={minus} />
+      <GameContainer state={state} sentGame={sentGame} />
     </React.Fragment>
   );
 }

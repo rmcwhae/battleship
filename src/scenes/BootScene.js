@@ -4,6 +4,7 @@ import waterImg from '../assets/battleship_sprite_water.png';
 import explosionImg from '../assets/explosion.png';
 import config from '../config';
 import io from 'socket.io-client';
+import { SENT_GAME } from '../hooks/gameReducers';
 
 const socket = io(config.API_PATH);
 
@@ -86,7 +87,7 @@ export default class BootScene extends Phaser.Scene {
       font: '24pt "Inconsolata"',
       fill: 'green'
     });
-
+    console.log("In create():", this);
     const playerBoard = this.displayGrid(50, 80, false);
     const opponentBoard = this.displayGrid(500, 80, true);
 
@@ -260,9 +261,11 @@ export default class BootScene extends Phaser.Scene {
             tile.setFrame(0);
           })
           tile.on('pointerdown', function(pointer) {
-            // console.log('clicked', i, k);
-            socket.emit('shotFired', { row: getKeyByValue(rowNumbers, k + 1), col: i + 1 });
-            console.log('clicked', getKeyByValue(rowNumbers, k + 1), i + 1);
+            this.scene.game.sentGame({ row: getKeyByValue(rowNumbers, k + 1), col: i + 1 });
+            console.log('Before pause:', this.scene);
+            this.scene.scene.pause;
+            console.log('After pause:', this.scene);
+            // console.log('clicked', getKeyByValue(rowNumbers, k + 1), i + 1);
             // now send socket message to server…
             // console.log('inside displayGrid', this);
           });
