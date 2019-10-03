@@ -1,5 +1,5 @@
 // Data structure
-module export = {
+module.export = {
   gameState: {
     player_id: '123qwe456rty789uio',
     boards: { own: 
@@ -20,18 +20,18 @@ module export = {
               }
             },
     ships:  { own:
-                { 1: { row: a, col: 1, size: 2, sunk: false, horizontal: true},
-                  2: { row: b, col: 2, size: 2, sunk: false, horizontal: true},
-                  3: { row: c, col: 3, size: 2, sunk: false, horizontal: false},
-                  4: { row: e, col: 4, size: 2, sunk: false, horizontal: true},
-                  5: { row: f, col: 5, size: 2, sunk: false, horizontal: true},
-                }
+                { 1: { row: 'a', col: 1, size: 2, sunk: false, horizontal: true},
+                  2: { row: 'b', col: 2, size: 2, sunk: false, horizontal: true},
+                  3: { row: 'c', col: 3, size: 2, sunk: false, horizontal: false},
+                  4: { row: 'e', col: 4, size: 2, sunk: false, horizontal: true},
+                  5: { row: 'f', col: 5, size: 2, sunk: false, horizontal: true},
+                },
               opponent:
-                { 1: { row: a, col: 4, size: 2, sunk: false, horizontal: true},
-                  2: { row: b, col: 3, size: 2, sunk: false, horizontal: true},
-                  3: { row: c, col: 3, size: 2, sunk: false, horizontal: false},
-                  4: { row: e, col: 2, size: 2, sunk: false, horizontal: true},
-                  5: { row: f, col: 1, size: 2, sunk: false, horizontal: true},
+                { 1: { row: 'a', col: 4, size: 2, sunk: false, horizontal: true},
+                  2: { row: 'b', col: 3, size: 2, sunk: false, horizontal: true},
+                  3: { row: 'c', col: 3, size: 2, sunk: false, horizontal: false},
+                  4: { row: 'e', col: 2, size: 2, sunk: false, horizontal: true},
+                  5: { row: 'f', col: 1, size: 2, sunk: false, horizontal: true},
                 }
             },
     turn: { player: 'server',

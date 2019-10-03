@@ -8,6 +8,7 @@ import sample from '../sample';
 const socket = io(config.API_PATH);
 
 export default function useApplicationData () {
+  console.log("Before initial state:", io.id, "and", socket.id);
 
   const [ state, dispatch ] = useReducer(reducer,
     { gameState: sample,
@@ -18,26 +19,35 @@ export default function useApplicationData () {
 
     useEffect(() => {
       socket.on('connect', () => {  
-        console.log("Socket connected:", socket.id, "with data:", socket);
-        dispatch(SERVER, 'CONNECTED');
-        socket.emit('appFeed', { board: { A: [0, 0], B: [0, 0] }, shot: 'A1' });
+        dispatch({ type: SERVER, serverState: 'CONNECTED'});
+
+        // Create a confirmation to server this is a player
+        socket.emit('player', socket.id, (initGameState) =>{
+          console.log(initGameState);
+          // dispatch({ type: RECEIVED_GAME, initGameState, serverState: 'RECEIVED', containerState: 'IN_PROGRESS'});
+        });
         socket.on('serverFeed', feed => {
-          dispatch(RECEIVED_GAME, { payload: { gameState: feed, serverState: 'RECEIVED'}});
+          console.log("Received data");
+          dispatch({ type: RECEIVED_GAME, gameState: feed, serverState: 'RECEIVED'});
+        });
+        socket.on('error', (error) => {
+          dispatch({ type: SERVER, serverState: 'ERROR'});
+          socket.emit('disconnect');
         });  
       })
     }, []);
   
   function sentGame(newGameState) {
-    if (state.socket.id !== undefined && state.serverState === 'RECEIVED') {
-      state.socket.emit('gameFeed', (req, res) => {
+    if (socket.id !== undefined && state.serverState === 'RECEIVED') {
+      socket.emit('gameFeed', (req, res) => {
         console.log("Sucessful sent");
-        dispatch(SENT_GAME, { payload: {gameState: newGameState, serverState: 'SENT'}});
+        dispatch({ type: SENT_GAME, gameState: newGameState, serverState: 'SENT'});
       });
     }
   };
 
   function gameOver() {
-    dispatch(SERVER, 'GAME OVER');
+    dispatch({ type: SERVER, serverState: 'GAME OVER'});
     socket.emit('disconnect');
   };
 
@@ -45,12 +55,12 @@ export default function useApplicationData () {
     return socket.id;
   };
   
-  function setServer(serverState) {
-    dispatch(SERVER, 'serverState')
+  function setServer(newServerState) {
+    dispatch({ type: SERVER, serverState: newServerState});
   };
 
-  function setContainer(containerState) {
-    dispatch(CONTAINER, 'containerState')
+  function setContainer(newContainerState) {
+    dispatch({ type: CONTAINER, containerState: newContainerState});
   };
 
   const add = status => dispatch({ type: INCREMENT });

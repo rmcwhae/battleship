@@ -6,15 +6,17 @@ export const INCREMENT = 'INCREMENT';
 
 export default function reducer(
   state = initState,
-  {type: string, ...payload}) {
-    console.log("Action:", type, "& Payload", payload);
+  {type, ...payload}) {
+    console.log("In reducer:", type, "& Payload", payload);
 
   switch (type) {
     case SENT_GAME:
       return { ...state, ...payload};
 
     case RECEIVED_GAME:
-        return { ...state,  ...payload};
+      state = Object.assign({}, state, payload);
+      console.log("After reducer change server state:", state.serverState, "with game:", state.gameState);
+      return state;
 
     case CONTAINER:
       return { ...state,  ...payload};
