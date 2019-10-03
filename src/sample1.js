@@ -21,20 +21,20 @@ module.exports = {
       }
     },
     ships: {
-      own: {
-        1: { row: 'a', col: 1, size: 2, sunk: false, horizontal: true },
-        2: { row: 'b', col: 2, size: 2, sunk: false, horizontal: true },
-        3: { row: 'c', col: 3, size: 2, sunk: false, horizontal: false },
-        4: { row: 'e', col: 4, size: 2, sunk: false, horizontal: true },
-        5: { row: 'f', col: 5, size: 2, sunk: false, horizontal: true }
-      },
-      opponent: {
-        1: { row: 'a', col: 2, size: 2, sunk: false, horizontal: true },
-        2: { row: 'b', col: 3, size: 2, sunk: false, horizontal: true },
-        3: { row: 'c', col: 3, size: 2, sunk: false, horizontal: false },
-        4: { row: 'e', col: 2, size: 2, sunk: false, horizontal: true },
-        5: { row: 'f', col: 1, size: 2, sunk: false, horizontal: true }
-      }
+      own: [
+        { row: 'a', col: 1, size: 2, sunk: false, horizontal: true },
+        { row: 'b', col: 2, size: 2, sunk: false, horizontal: true },
+        { row: 'c', col: 3, size: 2, sunk: false, horizontal: false },
+        { row: 'e', col: 4, size: 2, sunk: false, horizontal: true },
+        { row: 'f', col: 5, size: 2, sunk: false, horizontal: true }
+      ],
+      opponent: [
+        { row: 'a', col: 2, size: 2, sunk: false, horizontal: true },
+        { row: 'b', col: 3, size: 2, sunk: false, horizontal: true },
+        { row: 'c', col: 3, size: 2, sunk: false, horizontal: false },
+        { row: 'e', col: 2, size: 2, sunk: false, horizontal: true },
+        { row: 'f', col: 1, size: 2, sunk: false, horizontal: true }
+      ]
     },
     turn: { player: 'server', row: '', col: '' }
   }

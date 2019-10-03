@@ -4,6 +4,7 @@ import waterImg from '../assets/battleship_sprite_water.png';
 import explosionImg from '../assets/explosion.png';
 import config from '../config';
 import io from 'socket.io-client';
+import sample from '../sample0'
 import { SENT_GAME } from '../hooks/gameReducers';
 
 const socket = io(config.API_PATH);
@@ -24,23 +25,11 @@ const rowNumbers = {
   f: 6
 };
 
-let playerSpotsOccupied = {
-  a: [0, 0, 0, 0, 0, 0],
-  b: [0, 0, 0, 0, 0, 0],
-  c: [0, 0, 0, 0, 0, 0],
-  d: [0, 0, 0, 0, 0, 0],
-  e: [0, 0, 0, 0, 0, 0],
-  f: [0, 0, 0, 0, 0, 0]
-};
+let playerSpotsOccupied = sample.gameState.boards.own;
+let opponentSpotsOccupied = sample.gameState.boards.opponent;
 
-let opponentSpotsOccupied = {
-  a: [0, 0, 0, 0, 0, 0],
-  b: [0, 0, 0, 0, 0, 0],
-  c: [0, 0, 0, 0, 0, 0],
-  d: [0, 0, 0, 0, 0, 0],
-  e: [0, 0, 0, 0, 0, 0],
-  f: [0, 0, 0, 0, 0, 0]
-};
+let playerOneShips = sample.gameState.ships.own;
+let playerTwoShips = sample.gameState.ships.opponent;
 
 const getKeyByValue = function(object, value) {
   return Object.keys(object).find(key => object[key] === value);
@@ -87,23 +76,19 @@ export default class BootScene extends Phaser.Scene {
       font: '24pt "Inconsolata"',
       fill: 'green'
     });
-    console.log("In create():", this);
+    // console.log("In create():", this);
+
+
     const playerBoard = this.displayGrid(50, 80, false);
     const opponentBoard = this.displayGrid(500, 80, true);
+    // let playerOneShips = this.distributeShips(playerSpotsOccupied);
+    // let playerTwoShips = this.distributeShips(opponentSpotsOccupied);
 
-    let playerOneShips = this.distributeShips(playerSpotsOccupied);
-    let playerTwoShips = this.distributeShips(opponentSpotsOccupied);
-    playerTwoShips[0].sunk = true;
-    playerTwoShips[1].sunk = true;
-    playerTwoShips[2].sunk = false;
-    playerTwoShips[3].sunk = false;
-    playerTwoShips[4].sunk = true;
-
-    this.renderShips(this, 'playerBoard', playerOneShips, false);
+    this.renderShips('playerBoard', playerOneShips, false);
 
     // console.log('after render', this);
 
-    this.renderShips(this, 'opponentBoard', playerTwoShips, true);
+    this.renderShips('opponentBoard', playerTwoShips, true);
 
     var config = {
       key: 'explode',
@@ -135,7 +120,7 @@ export default class BootScene extends Phaser.Scene {
 
   // }
 
-  renderShips = function(game, board, shipsArray, onlySunk) {
+  renderShips = function(board, shipsArray, onlySunk) {
     let adjustmentx = 440; // hardcoded to align with opponent board
     let adjustmenty = 50;
     let frame = 0;
@@ -148,7 +133,7 @@ export default class BootScene extends Phaser.Scene {
     }
     // now display them
     shipsArray.forEach((ship, index) => {
-      boats[index] = game.add.sprite(
+      boats[index] = this.add.sprite(
         ship.col * gridDimensions.singleSquareLength + adjustmentx,
         rowNumbers[ship.row] * gridDimensions.singleSquareLength + adjustmenty,
         'greenBoat',
