@@ -5,7 +5,7 @@ import GameContainer from './GameContainer';
 import io from 'socket.io-client';
 import config from '../config';
 import styled from 'styled-components'
-import useApplicationData from '../reducers/gameData'
+import useApplicationData from '../hooks/gameData'
 
 export default function App() {
 
@@ -13,6 +13,8 @@ export default function App() {
     state,
     dispatch,
     add,
+    minus,
+    toggle,
     gameOver,
     socketID,
     sentGame,
@@ -37,9 +39,10 @@ export default function App() {
         {state.serverState === 'RECEIVED' && <Title>Received</Title>}
         {state.serverState === 'ERROR' && <Title>Error - Aborting Game</Title> }
         <button onClick={() => add()}>Intermediate</button>
+        <button onClick={() => toggle()}>Toggle Static Board</button>
         <button onClick={() => sentGame({turn: { player: 'server', row: 'a', col: '1'}})}>Difficult</button>
       </div>
-      <GameContainer state={state} setState={sentGame} />
+      <GameContainer state={state} setState={minus} />
     </React.Fragment>
   );
 }

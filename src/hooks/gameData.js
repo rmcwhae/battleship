@@ -1,17 +1,19 @@
 import { useEffect, useReducer } from "react";
-import reducer, { SENT_GAME, RECEIVED_GAME, CONTAINER, SERVER, INCREMENT } from "./gameReducers";
+import reducer, { SENT_GAME, RECEIVED_GAME, CONTAINER, SERVER, INCREMENT, DECREASE, TOGGLE } from "./gameReducers";
 import io from 'socket.io-client';
 import config from '../config';
-import sample from '../sample';
+import sample0 from '../sample0';
+import sample1 from '../sample1';
 // console.log("Config", config);
 
 const socket = io(config.API_PATH);
+let staticGame = true;
 
 export default function useApplicationData () {
   console.log("Before initial state:", io.id, "and", socket.id);
 
   const [ state, dispatch ] = useReducer(reducer,
-    { gameState: sample,
+    { gameState: sample0,
       count: 0,
       serverState: '',
       containerState: 'SETUP'
@@ -22,8 +24,8 @@ export default function useApplicationData () {
         dispatch({ type: SERVER, serverState: 'CONNECTED'});
 
         // Create a confirmation to server this is a player
-        socket.emit('player', socket.id, (initGameState) =>{
-          console.log(initGameState);
+        socket.emit('player', socket.id, function (initGameState) {
+          console.log("confirmed player:", initGameState);
           // dispatch({ type: RECEIVED_GAME, initGameState, serverState: 'RECEIVED', containerState: 'IN_PROGRESS'});
         });
         socket.on('serverFeed', feed => {
@@ -40,7 +42,7 @@ export default function useApplicationData () {
   function sentGame(newGameState) {
     if (socket.id !== undefined && state.serverState === 'RECEIVED') {
       socket.emit('gameFeed', (req, res) => {
-        console.log("Sucessful sent");
+        console.log("Sucessful sent", req, " and ", res);
         dispatch({ type: SENT_GAME, gameState: newGameState, serverState: 'SENT'});
       });
     }
@@ -63,7 +65,20 @@ export default function useApplicationData () {
     dispatch({ type: CONTAINER, containerState: newContainerState});
   };
 
-  const add = status => dispatch({ type: INCREMENT });
+  const minus = () => dispatch({ type: DECREASE});
 
-  return { state, dispatch, sentGame, gameOver, socketID, setContainer, add };
+  const add = () => dispatch({ type: INCREMENT });
+
+  function toggle(){
+    if (staticGame === true) {
+      console.log()
+      staticGame = false;
+      dispatch({ type: TOGGLE, gameState: sample0 });
+    } else {
+      staticGame = true;
+      dispatch({ type: TOGGLE, gameState: sample1  })
+    }
+  };
+
+  return { state, dispatch, sentGame, gameOver, socketID, setContainer, add, minus, toggle };
 };

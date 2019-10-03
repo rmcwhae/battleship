@@ -3,6 +3,8 @@ export const RECEIVED_GAME = 'RECEIVED_GAME';
 export const CONTAINER = 'CONTAINER';
 export const SERVER = 'SERVER';
 export const INCREMENT = 'INCREMENT';
+export const DECREASE = 'DECREASE';
+export const TOGGLE = 'TOGGLE';
 
 export default function reducer(
   state = initState,
@@ -22,10 +24,16 @@ export default function reducer(
       return { ...state,  ...payload};
 
     case SERVER:
-      return { ...state,  ...payload };
-      
+      return { ...state,  ...payload};
+ 
+    case DECREASE:
+      return { ...state, count: state.count - 1};
+
     case INCREMENT:
       return { ...state, count: state.count + 1};
+
+    case TOGGLE:
+      return { ...state, ...payload};
   
     default:
       // return state;

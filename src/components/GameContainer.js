@@ -4,7 +4,7 @@ import Game from './Game';
 
 
 export default function GameContainer(props) {
-  console.log("Game Container's create Game has", props.state.count, "clicks");
+  // console.log("Game Container's create Game has", props.state.count, "clicks");
 
   const [game, setGame] = React.useState();
   React.useEffect(() => {
@@ -12,7 +12,7 @@ export default function GameContainer(props) {
   }, [])
 
   React.useEffect(() => {
-    console.log("Game is now ->", typeof game, game);
+    // console.log("Game is now ->", typeof game, game);
     game && game.setProps(props);
   }, [props.state]);
 

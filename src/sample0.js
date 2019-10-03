@@ -1,5 +1,5 @@
 // Data structure
-module.export = {
+module.exports = {
   gameState: {
     player_id: '123qwe456rty789uio',
     boards: { own: 
