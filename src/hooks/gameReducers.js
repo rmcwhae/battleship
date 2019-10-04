@@ -5,6 +5,7 @@ export const SERVER = 'SERVER';
 export const INCREMENT = 'INCREMENT';
 export const DECREASE = 'DECREASE';
 export const TOGGLE = 'TOGGLE';
+export const SCENE = 'SCENE';
 
 export default function reducer(
   state = initState,
@@ -33,6 +34,9 @@ export default function reducer(
       return { ...state, count: state.count + 1};
 
     case TOGGLE:
+      return { ...state, ...payload};
+    
+    case SCENE:
       return { ...state, ...payload};
   
     default:

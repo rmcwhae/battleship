@@ -131,9 +131,9 @@ export default class BootScene extends Phaser.Scene {
     // this.explode(this, 'opponentBoard', 'e', 5);
     // this.explode(this, 'opponentBoard', 'f', 6);
   }
-  // update() {
+  update() {
 
-  // }
+  }
 
   renderShips = function(game, board, shipsArray, onlySunk) {
     let adjustmentx = 440; // hardcoded to align with opponent board

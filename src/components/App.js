@@ -15,6 +15,7 @@ export default function App() {
     add,
     minus,
     toggle,
+    setScene,
     gameOver,
     socketID,
     sentGame,
@@ -42,7 +43,7 @@ export default function App() {
         <button onClick={() => toggle()}>Toggle Static Board</button>
         <button onClick={() => sentGame({turn: { player: 'server', row: 'a', col: '1'}})}>Difficult</button>
       </div>
-      <GameContainer state={state} sentGame={sentGame} />
+      <GameContainer state={state} sentGame={sentGame} setScene={setScene} />
     </React.Fragment>
   );
 }

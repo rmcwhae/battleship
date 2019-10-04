@@ -1,5 +1,5 @@
 import { useEffect, useReducer, useState } from "react";
-import reducer, { SENT_GAME, RECEIVED_GAME, CONTAINER, SERVER, INCREMENT, DECREASE, TOGGLE } from "./gameReducers";
+import reducer, { SENT_GAME, RECEIVED_GAME, CONTAINER, SERVER, INCREMENT, DECREASE, TOGGLE, SCENE } from "./gameReducers";
 import io from 'socket.io-client';
 import config from '../config';
 import sample0 from '../sample0';
@@ -50,6 +50,10 @@ export default function useApplicationData () {
     // }
   };
 
+  function setScene(currentScene) {
+    dispatch({ type: SCENE, scene: currentScene });
+  };
+
   function gameOver() {
     dispatch({ type: SERVER, serverState: 'GAME OVER'});
     socket.emit('disconnect');
@@ -82,5 +86,5 @@ export default function useApplicationData () {
     }
   };
 
-  return { state, dispatch, sentGame, gameOver, socketID, setContainer, add, minus, toggle };
+  return { state, dispatch, sentGame, setScene, gameOver, socketID, setContainer, add, minus, toggle };
 };
