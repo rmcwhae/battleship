@@ -29,14 +29,15 @@ const rowNumbers = {
 
 const playerSpotsOccupied = sample.gameState.boards.own;
 const opponentSpotsOccupied = sample.gameState.boards.opponent;
-let shotsOnPlayerOne = sample.gameState.shots.opponent
+let shotsOnPlayerOne = sample.gameState.shots.opponent;
 let shotsOnOpponent = sample.gameState.shots.own;
 
 const getKeyByValue = function(object, value) {
   return Object.keys(object).find(key => object[key] === value);
 };
 
-const getRowLetterByNumber = function(rowNumber) { // rowNumber is 0-5, this will return a-f
+const getRowLetterByNumber = function(rowNumber) {
+  // rowNumber is 0-5, this will return a-f
   return getKeyByValue(rowNumbers, rowNumber + 1);
 };
 
@@ -68,7 +69,6 @@ export default class BootScene extends Phaser.Scene {
   }
 
   create() {
-
     const leftTitle = this.add.text(200 - 360 / 2, 0, 'Your Ships', {
       font: '24pt "Inconsolata"',
       fill: 'green'
@@ -85,12 +85,22 @@ export default class BootScene extends Phaser.Scene {
       font: '24pt "Inconsolata"',
       fill: 'green'
     });
-    
-    
-    const playerBoard = this.displayGrid(50, 80, playerSpotsOccupied, shotsOnPlayerOne, false);
-    const opponentBoard = this.displayGrid(500, 80, opponentSpotsOccupied, shotsOnOpponent, true);
-   
-    
+
+    const playerBoard = this.displayGrid(
+      50,
+      80,
+      playerSpotsOccupied,
+      shotsOnPlayerOne,
+      false
+    );
+    const opponentBoard = this.displayGrid(
+      500,
+      80,
+      opponentSpotsOccupied,
+      shotsOnOpponent,
+      true
+    );
+
     // console.log("In create():", this.game.appState.gameState.gameState.boards.own);
 
     let playerOneShips = this.game.appState.gameState.gameState.ships.own;
@@ -125,17 +135,23 @@ export default class BootScene extends Phaser.Scene {
     // this.explode(this, 'opponentBoard', 'f', 6);
   }
   update() {
-
-    // if (!myTurn) {
-    //   console.log('Updating…');
-    //   let playerOneShips = this.game.appState.gameState.gameState.ships.own;
-    //   let playerTwoShips = this.game.appState.gameState.gameState.ships.opponent;
-    //   this.renderShips('playerBoard', playerOneShips, false);
-    //   this.renderShips('opponentBoard', playerTwoShips, true);
-    //   // this.scene.resume();
-    //   this.scene.pause();
-      
-    // }
+    let hits = 0;
+    for (let i = 0; i < 6; i++) {
+      for (let j = 0; j < 6; j++) {
+        const row = getRowLetterByNumber(j);
+        const col = i;
+        if (
+          shotsOnOpponent[row][col] === 1 &&
+          opponentSpotsOccupied[row][col] === 1
+        )
+          hits++;
+      }
+    }
+    // console.log('hits', hits);
+    if (hits === 10) {
+      console.log('end game');
+      this.scene.pause();
+    }
   }
 
   renderShips = function(board, shipsArray, onlySunk) {
@@ -252,25 +268,33 @@ export default class BootScene extends Phaser.Scene {
 
   isHit = function(row, col, board) {
     return board[row][col] === 1;
-  }
+  };
 
-  displayGrid = function(xoffset, yoffset, spotsOccupiedObj, shotsObj, opponentBoardFlag) {
+  displayGrid = function(
+    xoffset,
+    yoffset,
+    spotsOccupiedObj,
+    shotsObj,
+    opponentBoardFlag
+  ) {
     myTurn = true;
     for (let i = 0; i < 6; i++) {
       for (let k = 0; k < 6; k++) {
+        let tile = this.add.sprite(60 * i + xoffset, 60 * k + yoffset, 'water');
 
-        let tile = this.add
-          .sprite(60 * i + xoffset, 60 * k + yoffset, 'water');
-
-          //.setInteractive(); for vacant spots;
+        //.setInteractive(); for vacant spots;
         const row = getRowLetterByNumber(k);
         const col = i;
         if (spotsOccupiedObj[row][col] === 1 && shotsObj[row][col] === 1) {
-          tile.setFrame(3);// it's a hit!
-        } else if (spotsOccupiedObj[row][col] === 0 && shotsObj[row][col] === 1) {
-          tile.setFrame(2);// it's a miss!
-        } else if (opponentBoardFlag) { // && turn?
-          tile.setInteractive();// let's blow stuff up!
+          tile.setFrame(3); // it's a hit!
+        } else if (
+          spotsOccupiedObj[row][col] === 0 &&
+          shotsObj[row][col] === 1
+        ) {
+          tile.setFrame(2); // it's a miss!
+        } else if (opponentBoardFlag) {
+          // && turn?
+          tile.setInteractive(); // let's blow stuff up!
         }
 
         if (opponentBoardFlag) {
@@ -282,14 +306,23 @@ export default class BootScene extends Phaser.Scene {
             tile.setFrame(0);
           });
           tile.on('pointerdown', function(pointer) {
+            shotsObj[row][col] = 1;
             this.scene.game.sentGame({
               row: getRowLetterByNumber(k),
-              col: i + 1
+              col: i
             });
-            // if (this.isHit(getKeyByValue(rowNumbers, k + 1), i + 1, opponentBoard)) {
-            //   // explode...
-            //   console.log('Its a hit!');
-            // }
+            if (spotsOccupiedObj[row][col] === 1) {
+              // explode...
+              console.log('kaboom a hit!');
+              tile.setFrame(3);
+              tile.removeInteractive();
+            }
+            if (spotsOccupiedObj[row][col] === 0) {
+              // explode...
+              console.log('kaboom a hit!');
+              tile.setFrame(2);
+              tile.removeInteractive();
+            }
             myTurn = false;
             // this.scene.scene.pause(); // works
             // console.log('Before pause:', this.scene);
