@@ -28,7 +28,15 @@ const rowNumbers = {
 };
 
 const playerSpotsOccupied = sample.gameState.boards.own;
-const opponentSpotsOccupied = sample.gameState.boards.opponent;
+// const opponentSpotsOccupied = sample.gameState.boards.opponent;
+let opponentSpotsOccupied = {
+  a: [0, 0, 0, 0, 0, 0],
+  b: [0, 0, 0, 0, 0, 0],
+  c: [0, 0, 0, 0, 0, 0],
+  d: [0, 0, 0, 0, 0, 0],
+  e: [0, 0, 0, 0, 0, 0],
+  f: [0, 0, 0, 0, 0, 0]
+};
 let shotsOnPlayerOne = sample.gameState.shots.opponent;
 let shotsOnOpponent = sample.gameState.shots.own;
 
@@ -104,7 +112,8 @@ export default class BootScene extends Phaser.Scene {
     // console.log("In create():", this.game.appState.gameState.gameState.boards.own);
 
     let playerOneShips = this.game.appState.gameState.gameState.ships.own;
-    let playerTwoShips = this.game.appState.gameState.gameState.ships.opponent;
+    // let playerTwoShips = this.game.appState.gameState.gameState.ships.opponent;
+    let playerTwoShips = this.distributeShips(opponentSpotsOccupied);
     this.renderShips('playerBoard', playerOneShips, false);
     this.renderShips('opponentBoard', playerTwoShips, true);
 
