@@ -2,6 +2,7 @@ import 'phaser';
 import greenBoatImg from '../assets/green_battleship_sprite.png';
 import waterImg from '../assets/battleship_sprite_water.png';
 import explosionImg from '../assets/explosion.png';
+import explosionImgBlue from '../assets/explosion_blue.png';
 import config from '../config';
 import io from 'socket.io-client';
 import sample from '../sample0';
@@ -70,6 +71,11 @@ export default class BootScene extends Phaser.Scene {
       frameHeight: 64,
       endFrame: 23
     });
+    this.load.spritesheet('boomBlue', explosionImgBlue, {
+      frameWidth: 64,
+      frameHeight: 64,
+      endFrame: 23
+    });
     this.load.spritesheet('water', waterImg, {
       frameWidth: 60,
       frameHeight: 60
@@ -117,7 +123,7 @@ export default class BootScene extends Phaser.Scene {
     this.renderShips('playerBoard', playerOneShips, false);
     this.renderShips('opponentBoard', playerTwoShips, true);
 
-    var config = {
+    const explodeconfig = {
       key: 'explode',
       frames: this.anims.generateFrameNumbers('boom', {
         start: 0,
@@ -127,7 +133,18 @@ export default class BootScene extends Phaser.Scene {
       frameRate: 20
     };
 
-    this.anims.create(config);
+    const explodeconfigBlue = {
+      key: 'explodeBlue',
+      frames: this.anims.generateFrameNumbers('boomBlue', {
+        start: 0,
+        end: 23,
+        first: 23
+      }),
+      frameRate: 20
+    };
+
+    this.anims.create(explodeconfig);
+    this.anims.create(explodeconfigBlue);
   }
   update() {
     let hits = 0;
@@ -176,7 +193,7 @@ export default class BootScene extends Phaser.Scene {
     });
   };
 
-  explode = function(board, row, col) {
+  explode = function(board, row, col, blue) {
     let adjustmentx = 500;
     let adjustmenty = 20;
     if (board === 'playerBoard') {
@@ -185,8 +202,13 @@ export default class BootScene extends Phaser.Scene {
     const xcoord = gridDimensions.singleSquareLength * col + adjustmentx;
     const ycoord =
       gridDimensions.singleSquareLength * rowNumbers[row] + adjustmenty;
-    const boom = this.add.sprite(xcoord, ycoord, 'boom');
-    boom.anims.play('explode');
+    if (!blue) {
+      const boom = this.add.sprite(xcoord, ycoord, 'boom');
+      boom.anims.play('explode');
+    } else {
+      const boomBlue = this.add.sprite(xcoord, ycoord, 'boomBlue');
+      boomBlue.anims.play('explodeBlue');
+    }
   };
 
   distributeShips = function(spotsOccupiedObj) {
@@ -307,16 +329,14 @@ export default class BootScene extends Phaser.Scene {
               col: i
             });
             if (spotsOccupiedObj[row][col] === 1) {
-              // explode...
-              console.log('inside displayGrid', this);
-              console.log('kaboom a hit!');
+              // It's a hit!
               this.scene.explode('opponentBoard', row, col);
               tile.setFrame(3);
               tile.removeInteractive();
             }
             if (spotsOccupiedObj[row][col] === 0) {
-              // explode...
-              console.log('kaboom a hit!');
+              // It's a miss!
+              this.scene.explode('opponentBoard', row, col, 1);
               tile.setFrame(2);
               tile.removeInteractive();
             }
