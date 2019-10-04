@@ -5,11 +5,12 @@ export const SERVER = 'SERVER';
 export const INCREMENT = 'INCREMENT';
 export const DECREASE = 'DECREASE';
 export const TOGGLE = 'TOGGLE';
+export const BOARD_RENDER = 'BOARD_RENDER';
 
 export default function reducer(
   state = initState,
   {type, ...payload}) {
-    console.log("In reducer:", type, "& Payload", payload);
+    console.log("In reducer:", type, "& Payload", payload, ' to update current state', state);
 
   switch (type) {
     case SENT_GAME:
@@ -17,8 +18,14 @@ export default function reducer(
 
     case RECEIVED_GAME:
       state = Object.assign({}, state, payload);
-      console.log("After reducer change server state:", state.serverState, "with game:", state.gameState);
+      console.log("After reducer change server state:", state.serverState, "with game:", state);
       return state;
+
+    case DECREASE:
+      return { ...state, count: state.count - 1};
+
+    case INCREMENT:
+      return { ...state, count: state.count + 1};
 
     case CONTAINER:
       return { ...state,  ...payload};
@@ -26,13 +33,10 @@ export default function reducer(
     case SERVER:
       return { ...state,  ...payload};
  
-    case DECREASE:
-      return { ...state, count: state.count - 1};
-
-    case INCREMENT:
-      return { ...state, count: state.count + 1};
-
     case TOGGLE:
+      return { ...state, ...payload};
+    
+    case BOARD_RENDER:
       return { ...state, ...payload};
   
     default:

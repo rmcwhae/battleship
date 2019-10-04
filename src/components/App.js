@@ -15,13 +15,14 @@ export default function App() {
     add,
     minus,
     toggle,
+    setScene,
     gameOver,
     socketID,
     sentGame,
     setContainer
   } = useApplicationData();
 
-  console.log("App.js before render - server:", state.serverState, ", container:", state.containerState, ", game:", state.gameState);
+  // console.log("App.js before render - server:", state.serverState, ", container:", state.containerState, ", game:", state.gameState);
 
   const Title = styled.h2`
     font-family: 'Inconsolata', monospace;
@@ -42,7 +43,7 @@ export default function App() {
         <button onClick={() => toggle()}>Toggle Static Board</button>
         <button onClick={() => sentGame({turn: { player: 'server', row: 'a', col: '1'}})}>Difficult</button>
       </div>
-      <GameContainer state={state} sentGame={sentGame} />
+      <GameContainer state={state} sentGame={sentGame} setScene={setScene} />
     </React.Fragment>
   );
 }

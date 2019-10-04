@@ -1,7 +1,7 @@
 import * as React from 'react';
 import Game from './Game';
 // import App from './App.jsx';
-
+let scene = undefined;
 
 export default function GameContainer(props) {
   // console.log("Game Container's create Game has", props.state.count, "clicks");
@@ -9,15 +9,26 @@ export default function GameContainer(props) {
   const [game, setGame] = React.useState();
 
   React.useEffect(() => {
-    setGame(new Game({appState: props.state, sentGame: props.sentGame}));
-  }, [])
+    setGame(new Game({ appState: props.state, sentGame: props.sentGame, setScene: props.setScene}));
+  }, []);
 
   React.useEffect(() => {
     // console.log("Game is now ->", typeof game, game);
     game && game.setProps(props);
-    // console.log("In game use effect", props.state);
+
+    // all scene's render function when gameState changes: testing only
+    // if (scene) {
+    //   scene.render
+    // }
   }, [props.state.gameState]);
 
+  scene = game && game.scene.getScene('Boot');
+
+  // console.log("Checking scene in Container:", scene);   
+
+    // React.useEffect(() => {
+    //   props.setScene(scene);
+    // }, []);
  
   return (
     <section className="phaser-container" id="battleship" />
