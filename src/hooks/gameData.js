@@ -15,7 +15,7 @@ export default function useApplicationData () {
     { gameState: sample0,
       count: 0,
       serverState: '',
-      containerState: 'SETUP',
+      containerState: 'LEVEL',
       board_render: 'true' // RENDER <---> 
     });
 
@@ -27,22 +27,27 @@ export default function useApplicationData () {
         socket.emit('player', socket.id, function (initGameState) {
           if (initGameState.client === initGameState.server) {
             console.log("confirmed player:", initGameState);
-            dispatch({ type: RECEIVED_GAME, initGameState, serverState: 'RECEIVED', containerState: 'IN_PROGRESS'});
+            dispatch({ type: RECEIVED_GAME, gameState: initGameState['gameState'], serverState: 'RECEIVED', containerState: 'IN_PROGRESS'});
           }
         });
         socket.on('serverFeed', feed => {
-          console.log("Received data");
+          console.log("Received data", feed);
           dispatch({ type: RECEIVED_GAME, gameState: feed, serverState: 'RECEIVED'});
         });
         socket.on('error', (error) => {
           dispatch({ type: SERVER, serverState: 'ERROR'});
           socket.emit('disconnect');
-        });  
+        });
+        // socket.on('disconnect', (error) => {
+        //   dispatch({ type: SERVER, serverState: 'GAME OVER'});
+        //   alert('Server socket disconnected');
+        // });  
+
       })
     }, []);
   
   function sentGame(newGameState) {
-    console.log("Before emit to server:", socket.id, " with ",state.serverState);
+    // console.log("Before emit to server:", socket.id, " with ",state.serverState);
     // if (socket.id !== undefined && state.serverState === 'RECEIVED') {
       socket.emit('gameFeed', newGameState, (feed) => {
         console.log("Sucessful sent", feed);

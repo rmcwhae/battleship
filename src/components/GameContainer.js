@@ -24,7 +24,7 @@ export default function GameContainer(props) {
 
   scene = game && game.scene.getScene('Boot');
 
-  console.log("Checking scene in Container:", scene);   
+  // console.log("Checking scene in Container:", scene);   
 
     // React.useEffect(() => {
     //   props.setScene(scene);

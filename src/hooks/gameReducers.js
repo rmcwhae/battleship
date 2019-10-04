@@ -10,7 +10,7 @@ export const BOARD_RENDER = 'BOARD_RENDER';
 export default function reducer(
   state = initState,
   {type, ...payload}) {
-    console.log("In reducer:", type, "& Payload", payload);
+    console.log("In reducer:", type, "& Payload", payload, ' to update current state', state);
 
   switch (type) {
     case SENT_GAME:
@@ -18,7 +18,7 @@ export default function reducer(
 
     case RECEIVED_GAME:
       state = Object.assign({}, state, payload);
-      console.log("After reducer change server state:", state.serverState, "with game:", state.gameState);
+      console.log("After reducer change server state:", state.serverState, "with game:", state);
       return state;
 
     case DECREASE:

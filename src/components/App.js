@@ -22,7 +22,7 @@ export default function App() {
     setContainer
   } = useApplicationData();
 
-  console.log("App.js before render - server:", state.serverState, ", container:", state.containerState, ", game:", state.gameState);
+  // console.log("App.js before render - server:", state.serverState, ", container:", state.containerState, ", game:", state.gameState);
 
   const Title = styled.h2`
     font-family: 'Inconsolata', monospace;

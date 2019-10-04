@@ -32,7 +32,7 @@ export default class Game extends Phaser.Game {
     this.appState = props.state;
     // this.scene.resume('Boot');
 
-    console.log("in setProps:", this, 'and', props);
+    // console.log("in setProps:", this, 'and', props);
   }
 };
  
