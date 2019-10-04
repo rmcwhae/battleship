@@ -234,7 +234,7 @@ export default class BootScene extends Phaser.Scene {
     // console.log('hits', hits);
     if (hits === 10) {
       console.log('end game');
-      // this.scene.pause(); // works
+      this.scene.pause(); // works
     }
   }
 
@@ -330,7 +330,6 @@ export default class BootScene extends Phaser.Scene {
       for (let k = 0; k < 6; k++) {
         let tile = this.add.sprite(60 * i + xoffset, 60 * k + yoffset, 'water');
 
-        //.setInteractive(); for vacant spots;
         const row = getRowLetterByNumber(k);
         const col = i;
         if (spotsOccupiedObj[row][col] === 1 && shotsObj[row][col] === 1) {
