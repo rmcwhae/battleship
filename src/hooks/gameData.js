@@ -27,9 +27,9 @@ export default function useApplicationData () {
         dispatch({ type: SERVER, serverState: 'CONNECTED' });
 
         // Create a confirmation to server this is a player
-        socket.emit('player', socket.id, function ({ gameState, clientId, serverId, randomShots, knownShots, turn, ...rest }) {
+        socket.emit('player', socket.id, function ({ gameState, clientId, serverId, randomShots, knownShots, ...rest }) {
           if (socket.id === serverId) {
-            dispatch({ type: RECEIVED_GAME, serverState: 'RECEIVED', containerState: 'IN_PROGRESS', gameState, randomShots, knownShots, turn });
+            dispatch({ type: RECEIVED_GAME, serverState: 'RECEIVED', containerState: 'IN_PROGRESS', gameState, randomShots, knownShots });
             console.log("confirmed player after reducer:", gameState, clientId, serverId, randomShots, knownShots, rest, " is now", state);
           }
         });
