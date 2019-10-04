@@ -262,7 +262,7 @@ export default class BootScene extends Phaser.Scene {
         boats[index].x += gridDimensions.singleSquareLength / 2;
         boats[index].y -= gridDimensions.singleSquareLength / 2;
       }
-      const tween = this.tweens.add({
+      const tween = this.tweens.add({ // let's make it look pretty
         targets: boats[index],
         alpha: { from: 0, to: 1 },
         // alpha: { start: 0, to: 1 },
@@ -325,7 +325,7 @@ export default class BootScene extends Phaser.Scene {
     shotsObj,
     opponentBoardFlag
   ) {
-    myTurn = true;
+    // myTurn = true;
     for (let i = 0; i < 6; i++) {
       for (let k = 0; k < 6; k++) {
         let tile = this.add.sprite(60 * i + xoffset, 60 * k + yoffset, 'water');
