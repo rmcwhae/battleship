@@ -357,7 +357,7 @@ export default class BootScene extends Phaser.Scene {
             shotsObj[row][col] = 1; // update the hit
             this.scene.game.sentGame({
               row: getRowLetterByNumber(k),
-              col: i
+              col: i + 1
             });
             if (spotsOccupiedObj[row][col] === 1) {
               // It's a hit!
