@@ -9,15 +9,17 @@ export default function GameContainer(props) {
   const [game, setGame] = React.useState();
 
   React.useEffect(() => {
-    setGame(new Game({appState: props.state, sentGame: props.sentGame}));
+    setGame(new Game({ appState: props.state, sentGame: props.sentGame, setScene: props.setScene}));
   }, []);
 
   React.useEffect(() => {
     // console.log("Game is now ->", typeof game, game);
     game && game.setProps(props);
-    if (scene) {
-      scene.render
-    }
+
+    // all scene's render function when gameState changes: testing only
+    // if (scene) {
+    //   scene.render
+    // }
   }, [props.state.gameState]);
 
   scene = game && game.scene.getScene('Boot');

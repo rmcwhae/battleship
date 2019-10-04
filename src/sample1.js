@@ -37,7 +37,6 @@ module.exports = {
     turn: { player: 'server',
             row: '',
             col: ''
-          },
-    scene: ''
+          }
         }
 }

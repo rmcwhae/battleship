@@ -5,7 +5,7 @@ export const SERVER = 'SERVER';
 export const INCREMENT = 'INCREMENT';
 export const DECREASE = 'DECREASE';
 export const TOGGLE = 'TOGGLE';
-export const SCENE = 'SCENE';
+export const BOARD_RENDER = 'BOARD_RENDER';
 
 export default function reducer(
   state = initState,
@@ -21,22 +21,22 @@ export default function reducer(
       console.log("After reducer change server state:", state.serverState, "with game:", state.gameState);
       return state;
 
-    case CONTAINER:
-      return { ...state,  ...payload};
-
-    case SERVER:
-      return { ...state,  ...payload};
- 
     case DECREASE:
       return { ...state, count: state.count - 1};
 
     case INCREMENT:
       return { ...state, count: state.count + 1};
 
+    case CONTAINER:
+      return { ...state,  ...payload};
+
+    case SERVER:
+      return { ...state,  ...payload};
+ 
     case TOGGLE:
       return { ...state, ...payload};
     
-    case SCENE:
+    case BOARD_RENDER:
       return { ...state, ...payload};
   
     default:

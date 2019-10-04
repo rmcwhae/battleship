@@ -16,6 +16,7 @@ export default function useApplicationData () {
       count: 0,
       serverState: '',
       containerState: 'SETUP',
+      board_render: 'true' // RENDER <---> 
     });
 
     useEffect(() => {
@@ -50,8 +51,8 @@ export default function useApplicationData () {
     // }
   };
 
-  function setScene(currentScene) {
-    dispatch({ type: SCENE, scene: currentScene });
+  function setScene() {
+    dispatch({ type: SCENE, board_render: !state.board_render });
   };
 
   function gameOver() {
