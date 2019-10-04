@@ -28,6 +28,85 @@ const rowNumbers = {
   f: 6
 };
 
+const getKeyByValue = function(object, value) {
+  return Object.keys(object).find(key => object[key] === value);
+};
+
+const getRowLetterByNumber = function(rowNumber) {
+  // rowNumber is 0-5, this will return a-f
+  return getKeyByValue(rowNumbers, rowNumber + 1);
+};
+
+const distributeShips = function(spotsOccupiedObj) {
+  let shipsArray = [];
+
+  while (shipsArray.length < 5) {
+    let ship = {
+      // assign random spot
+      row: Object.keys(rowNumbers)[
+        Math.floor(Math.random() * Object.keys(rowNumbers).length)
+      ],
+      col:
+        rowNumbers[
+          Object.keys(rowNumbers)[
+            Math.floor(Math.random() * Object.keys(rowNumbers).length)
+          ]
+        ],
+      size: 2,
+      sunk: false,
+      horizontal: Math.random() >= 0.5 // true or false
+    };
+    if (ShipLocationIsValid(ship, spotsOccupiedObj)) {
+      // now verify that the proposed location is in fact valid, AND NOT OVERLAPPING EXISTING SHIP!
+      shipsArray.push(ship);
+      occupySpots(ship, spotsOccupiedObj);
+    }
+  }
+  return shipsArray;
+};
+
+const ShipLocationIsValid = function(ship, spotsOccupiedObj) {
+  if (ship.col === 6 && ship.horizontal === true) {
+    return false;
+  }
+  // ship cannot start in 6th row and be vertical
+  if (ship.row === 'f' && ship.horizontal === false) {
+    return false;
+  }
+  if (ship.horizontal) {
+    if (
+      spotsOccupiedObj[ship.row][ship.col - 1] === 1 ||
+      spotsOccupiedObj[ship.row][ship.col] === 1
+    ) {
+      return false; // ship cannot overlap an existing boat
+    }
+  } else {
+    // ship is vertical
+    if (
+      spotsOccupiedObj[ship.row][ship.col - 1] === 1 ||
+      spotsOccupiedObj[nextChar(ship.row)][ship.col - 1] === 1
+    ) {
+      return false; // ship cannot overlap an existing boat
+    }
+  }
+  return true;
+};
+
+const occupySpots = function(ship, spotsOccupiedObj) {
+  if (ship.horizontal) {
+    spotsOccupiedObj[ship.row][ship.col - 1] = 1;
+    spotsOccupiedObj[ship.row][ship.col] = 1;
+  } else {
+    //if ship is vertical
+    spotsOccupiedObj[ship.row][ship.col - 1] = 1;
+    spotsOccupiedObj[nextChar(ship.row)][ship.col - 1] = 1;
+  }
+};
+
+const nextChar = function(c) {
+  return String.fromCharCode(c.charCodeAt(0) + 1);
+};
+
 const playerSpotsOccupied = sample.gameState.boards.own;
 // const opponentSpotsOccupied = sample.gameState.boards.opponent;
 let opponentSpotsOccupied = {
@@ -38,17 +117,11 @@ let opponentSpotsOccupied = {
   e: [0, 0, 0, 0, 0, 0],
   f: [0, 0, 0, 0, 0, 0]
 };
+
+let playerTwoShips = distributeShips(opponentSpotsOccupied);
+
 let shotsOnPlayerOne = sample.gameState.shots.opponent;
 let shotsOnOpponent = sample.gameState.shots.own;
-
-const getKeyByValue = function(object, value) {
-  return Object.keys(object).find(key => object[key] === value);
-};
-
-const getRowLetterByNumber = function(rowNumber) {
-  // rowNumber is 0-5, this will return a-f
-  return getKeyByValue(rowNumbers, rowNumber + 1);
-};
 
 export default class BootScene extends Phaser.Scene {
   constructor(props) {
@@ -117,9 +190,8 @@ export default class BootScene extends Phaser.Scene {
 
     // console.log("In create():", this.game.appState.gameState.gameState.boards.own);
 
-    let playerOneShips = this.game.appState.gameState.gameState.ships.own;
+    const playerOneShips = this.game.appState.gameState.gameState.ships.own;
     // let playerTwoShips = this.game.appState.gameState.gameState.ships.opponent;
-    let playerTwoShips = this.distributeShips(opponentSpotsOccupied);
     this.renderShips('playerBoard', playerOneShips, false);
     this.renderShips('opponentBoard', playerTwoShips, true);
 
@@ -211,78 +283,6 @@ export default class BootScene extends Phaser.Scene {
     }
   };
 
-  distributeShips = function(spotsOccupiedObj) {
-    let shipsArray = [];
-
-    while (shipsArray.length < 5) {
-      let ship = {
-        // assign random spot
-        row: Object.keys(rowNumbers)[
-          Math.floor(Math.random() * Object.keys(rowNumbers).length)
-        ],
-        col:
-          rowNumbers[
-            Object.keys(rowNumbers)[
-              Math.floor(Math.random() * Object.keys(rowNumbers).length)
-            ]
-          ],
-        size: 2,
-        sunk: false,
-        horizontal: Math.random() >= 0.5 // true or false
-      };
-      if (this.ShipLocationIsValid(ship, spotsOccupiedObj)) {
-        // now verify that the proposed location is in fact valid, AND NOT OVERLAPPING EXISTING SHIP!
-        shipsArray.push(ship);
-        this.occupySpots(ship, spotsOccupiedObj);
-      }
-    }
-    return shipsArray;
-  };
-
-  ShipLocationIsValid = function(ship, spotsOccupiedObj) {
-    if (ship.col === 6 && ship.horizontal === true) {
-      return false;
-    }
-    // ship cannot start in 6th row and be vertical
-    if (ship.row === 'f' && ship.horizontal === false) {
-      return false;
-    }
-    if (ship.horizontal) {
-      if (
-        spotsOccupiedObj[ship.row][ship.col - 1] === 1 ||
-        spotsOccupiedObj[ship.row][ship.col] === 1
-      ) {
-        return false; // ship cannot overlap an existing boat
-      }
-    } else {
-      // ship is vertical
-      if (
-        spotsOccupiedObj[ship.row][ship.col - 1] === 1 ||
-        spotsOccupiedObj[this.nextChar(ship.row)][ship.col - 1] === 1
-      ) {
-        return false; // ship cannot overlap an existing boat
-      }
-    }
-    return true;
-  };
-
-  occupySpots = function(ship, spotsOccupiedObj) {
-    if (ship.horizontal) {
-      spotsOccupiedObj[ship.row][ship.col - 1] = 1;
-      spotsOccupiedObj[ship.row][ship.col] = 1;
-    } else {
-      //if ship is vertical
-      spotsOccupiedObj[ship.row][ship.col - 1] = 1;
-      spotsOccupiedObj[this.nextChar(ship.row)][ship.col - 1] = 1;
-    }
-  };
-
-  nextChar = function(c) {
-    return String.fromCharCode(c.charCodeAt(0) + 1);
-  };
-
-  onClick = function(item) {};
-
   isHit = function(row, col, board) {
     return board[row][col] === 1;
   };
@@ -333,6 +333,11 @@ export default class BootScene extends Phaser.Scene {
               this.scene.explode('opponentBoard', row, col);
               tile.setFrame(3);
               tile.removeInteractive();
+              // now check if boat is sunk and render it...
+              if (true) {
+                this.scene.renderShips('opponentBoard', playerTwoShips, false);
+                console.log('stuff here am i');
+              }
             }
             if (spotsOccupiedObj[row][col] === 0) {
               // It's a miss!
