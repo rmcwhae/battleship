@@ -4,7 +4,7 @@ import waterImg from '../assets/battleship_sprite_water.png';
 import explosionImg from '../assets/explosion.png';
 import config from '../config';
 import io from 'socket.io-client';
-import sample from '../sample0'
+import sample from '../sample0';
 import { SENT_GAME } from '../hooks/gameReducers';
 
 const socket = io(config.API_PATH);
@@ -16,6 +16,8 @@ const gridDimensions = {
 
 let boats = {};
 
+var myTurn = false;
+
 const rowNumbers = {
   a: 1,
   b: 2,
@@ -25,14 +27,17 @@ const rowNumbers = {
   f: 6
 };
 
-let playerSpotsOccupied = sample.gameState.boards.own;
-let opponentSpotsOccupied = sample.gameState.boards.opponent;
-
-let playerOneShips = sample.gameState.ships.own;
-let playerTwoShips = sample.gameState.ships.opponent;
+const playerSpotsOccupied = sample.gameState.boards.own;
+const opponentSpotsOccupied = sample.gameState.boards.opponent;
+let shotsOnPlayerOne = sample.gameState.shots.opponent
+let shotsOnOpponent = sample.gameState.shots.own;
 
 const getKeyByValue = function(object, value) {
   return Object.keys(object).find(key => object[key] === value);
+};
+
+const getRowLetterByNumber = function(rowNumber) { // rowNumber is 0-5, this will return a-f
+  return getKeyByValue(rowNumbers, rowNumber + 1);
 };
 
 export default class BootScene extends Phaser.Scene {
@@ -63,6 +68,7 @@ export default class BootScene extends Phaser.Scene {
   }
 
   create() {
+
     const leftTitle = this.add.text(200 - 360 / 2, 0, 'Your Ships', {
       font: '24pt "Inconsolata"',
       fill: 'green'
@@ -70,24 +76,26 @@ export default class BootScene extends Phaser.Scene {
     leftTitle.setInteractive({ useHandCursor: true });
     leftTitle.on('pointerup', () => {
       console.log('Bootscene ', this.game.state.count);
-      this.game.setState({ ...this.game.state, count: this.game.state.count - 1 });
+      this.game.setState({
+        ...this.game.state,
+        count: this.game.state.count - 1
+      });
     });
     const rightTitle = this.add.text(650 - 360 / 2, 0, 'Opponent', {
       font: '24pt "Inconsolata"',
       fill: 'green'
     });
-    // console.log("In create():", this);
+    
+    
+    const playerBoard = this.displayGrid(50, 80, playerSpotsOccupied, shotsOnPlayerOne, false);
+    const opponentBoard = this.displayGrid(500, 80, opponentSpotsOccupied, shotsOnOpponent, true);
+   
+    
+    // console.log("In create():", this.game.appState.gameState.gameState.boards.own);
 
-
-    const playerBoard = this.displayGrid(50, 80, false);
-    const opponentBoard = this.displayGrid(500, 80, true);
-    // let playerOneShips = this.distributeShips(playerSpotsOccupied);
-    // let playerTwoShips = this.distributeShips(opponentSpotsOccupied);
-
+    let playerOneShips = this.game.appState.gameState.gameState.ships.own;
+    let playerTwoShips = this.game.appState.gameState.gameState.ships.opponent;
     this.renderShips('playerBoard', playerOneShips, false);
-
-    // console.log('after render', this);
-
     this.renderShips('opponentBoard', playerTwoShips, true);
 
     var config = {
@@ -116,9 +124,19 @@ export default class BootScene extends Phaser.Scene {
     // this.explode(this, 'opponentBoard', 'e', 5);
     // this.explode(this, 'opponentBoard', 'f', 6);
   }
-  // update() {
+  update() {
 
-  // }
+    // if (!myTurn) {
+    //   console.log('Updating…');
+    //   let playerOneShips = this.game.appState.gameState.gameState.ships.own;
+    //   let playerTwoShips = this.game.appState.gameState.gameState.ships.opponent;
+    //   this.renderShips('playerBoard', playerOneShips, false);
+    //   this.renderShips('opponentBoard', playerTwoShips, true);
+    //   // this.scene.resume();
+    //   this.scene.pause();
+      
+    // }
+  }
 
   renderShips = function(board, shipsArray, onlySunk) {
     let adjustmentx = 440; // hardcoded to align with opponent board
@@ -232,24 +250,51 @@ export default class BootScene extends Phaser.Scene {
 
   onClick = function(item) {};
 
-  displayGrid = function(xoffset, yoffset, opponentBoard) {
+  isHit = function(row, col, board) {
+    return board[row][col] === 1;
+  }
+
+  displayGrid = function(xoffset, yoffset, spotsOccupiedObj, shotsObj, opponentBoardFlag) {
+    myTurn = true;
     for (let i = 0; i < 6; i++) {
       for (let k = 0; k < 6; k++) {
+
         let tile = this.add
-          .sprite(60 * i + xoffset, 60 * k + yoffset, 'water')
-          .setInteractive();
-        if (opponentBoard) {
+          .sprite(60 * i + xoffset, 60 * k + yoffset, 'water');
+
+          //.setInteractive(); for vacant spots;
+        const row = getRowLetterByNumber(k);
+        const col = i;
+        if (spotsOccupiedObj[row][col] === 1 && shotsObj[row][col] === 1) {
+          tile.setFrame(3);// it's a hit!
+        } else if (spotsOccupiedObj[row][col] === 0 && shotsObj[row][col] === 1) {
+          tile.setFrame(2);// it's a miss!
+        } else if (opponentBoardFlag) { // && turn?
+          tile.setInteractive();// let's blow stuff up!
+        }
+
+        if (opponentBoardFlag) {
+          myTurn = true;
           tile.on('pointerover', function(pointer) {
-            tile.setFrame(2);
-          })
+            tile.setFrame(1);
+          });
           tile.on('pointerout', function(pointer) {
             tile.setFrame(0);
-          })
+          });
           tile.on('pointerdown', function(pointer) {
-            this.scene.game.sentGame({ row: getKeyByValue(rowNumbers, k + 1), col: i + 1 });
-            console.log('Before pause:', this.scene);
-            this.scene.scene.pause;
-            console.log('After pause:', this.scene);
+            this.scene.game.sentGame({
+              row: getRowLetterByNumber(k),
+              col: i + 1
+            });
+            // if (this.isHit(getKeyByValue(rowNumbers, k + 1), i + 1, opponentBoard)) {
+            //   // explode...
+            //   console.log('Its a hit!');
+            // }
+            myTurn = false;
+            // this.scene.scene.pause(); // works
+            // console.log('Before pause:', this.scene);
+            // this.scene.scene.pause;
+            // console.log('After pause:', this.scene);
             // console.log('clicked', getKeyByValue(rowNumbers, k + 1), i + 1);
             // now send socket message to server…
             // console.log('inside displayGrid', this);
