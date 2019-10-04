@@ -234,7 +234,7 @@ export default class BootScene extends Phaser.Scene {
     // console.log('hits', hits);
     if (hits === 10) {
       console.log('end game');
-      this.scene.pause();
+      // this.scene.pause(); // works
     }
   }
 
@@ -262,6 +262,17 @@ export default class BootScene extends Phaser.Scene {
         boats[index].x += gridDimensions.singleSquareLength / 2;
         boats[index].y -= gridDimensions.singleSquareLength / 2;
       }
+      const tween = this.tweens.add({
+        targets: boats[index],
+        alpha: { from: 0, to: 1 },
+        // alpha: { start: 0, to: 1 },
+        // alpha: 1,
+        // alpha: '+=1',
+        ease: 'Back',       // 'Cubic', 'Elastic', 'Bounce', 'Back'
+        duration: 2000,
+        repeat: 0,            // -1: infinity
+        yoyo: false
+    });
     });
   };
 
