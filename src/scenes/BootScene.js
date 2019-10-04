@@ -119,20 +119,6 @@ export default class BootScene extends Phaser.Scene {
     };
 
     this.anims.create(config);
-
-    // this.input.onDown.add(this.clickHandler, this);
-    // try to get a console.log like 'you clicked A3'
-
-    // this.explode(this, 'playerBoard', 'a', 1);
-    // this.explode(this, 'playerBoard', 'a', 2);
-    // this.explode(this, 'playerBoard', 'b', 2);
-    // this.explode(this, 'playerBoard', 'c', 3);
-    // this.explode(this, 'playerBoard', 'd', 4);
-    // this.explode(this, 'playerBoard', 'e', 5);
-    // this.explode(this, 'playerBoard', 'f', 6);
-
-    // this.explode(this, 'opponentBoard', 'e', 5);
-    // this.explode(this, 'opponentBoard', 'f', 6);
   }
   update() {
     let hits = 0;
@@ -182,7 +168,7 @@ export default class BootScene extends Phaser.Scene {
   };
 
   explode = function(board, row, col) {
-    let adjustmentx = 440;
+    let adjustmentx = 500;
     let adjustmenty = 20;
     if (board === 'playerBoard') {
       adjustmentx = -10;
@@ -313,7 +299,9 @@ export default class BootScene extends Phaser.Scene {
             });
             if (spotsOccupiedObj[row][col] === 1) {
               // explode...
+              console.log('inside displayGrid', this);
               console.log('kaboom a hit!');
+              this.scene.explode('opponentBoard', row, col);
               tile.setFrame(3);
               tile.removeInteractive();
             }
@@ -323,17 +311,11 @@ export default class BootScene extends Phaser.Scene {
               tile.setFrame(2);
               tile.removeInteractive();
             }
-            myTurn = false;
+            // myTurn = false;
             // this.scene.scene.pause(); // works
-            // console.log('Before pause:', this.scene);
-            // this.scene.scene.pause;
-            // console.log('After pause:', this.scene);
             // console.log('clicked', getKeyByValue(rowNumbers, k + 1), i + 1);
             // now send socket message to server…
-            // console.log('inside displayGrid', this);
           });
-          // this.explode('opponentBoard', 'd', 4);
-          // tile.anchor.setTo(0.5, 0.5);
         }
       }
     }
