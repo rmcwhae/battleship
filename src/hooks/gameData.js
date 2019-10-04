@@ -16,7 +16,9 @@ export default function useApplicationData () {
       count: 0,
       serverState: '',
       containerState: 'LEVEL',
-      board_render: 'true' // RENDER <---> 
+      board_render: 'true',
+      randomShots: [],
+      knownShots: []
     });
 
     useEffect(() => {
@@ -24,10 +26,10 @@ export default function useApplicationData () {
         dispatch({ type: SERVER, serverState: 'CONNECTED' });
 
         // Create a confirmation to server this is a player
-        socket.emit('player', socket.id, function (initGameState) {
-          if (initGameState.client === initGameState.server) {
-            console.log("confirmed player:", initGameState);
-            dispatch({ type: RECEIVED_GAME, gameState: initGameState['gameState'], serverState: 'RECEIVED', containerState: 'IN_PROGRESS'});
+        socket.emit('player', socket.id, function ({ gameState, clientId, serverId, randomShots, knownShots, ...rest }) {
+          if (socket.id === serverId) {
+            dispatch({ type: RECEIVED_GAME, serverState: 'RECEIVED', containerState: 'IN_PROGRESS', gameState, randomShots, knownShots });
+            console.log("confirmed player after reducer:", gameState, clientId, serverId, randomShots, knownShots, rest, " is now", state);
           }
         });
         socket.on('serverFeed', feed => {
