@@ -287,6 +287,26 @@ export default class BootScene extends Phaser.Scene {
     return board[row][col] === 1;
   };
 
+  areShipsSunk = function(spotsOccupiedObj, shotsObj, shipsArray) {
+    shipsArray.forEach(ship => {
+      if (ship.horizontal) {
+        if (
+          shotsObj[ship.row][ship.col - 1] === 1 &&
+          shotsObj[ship.row][ship.col] === 1
+        ) {
+          ship.sunk = true;
+        }
+      } else {
+        if (
+          shotsObj[ship.row][ship.col - 1] === 1 &&
+          shotsObj[nextChar(ship.row)][ship.col - 1] === 1
+        ) {
+          ship.sunk = true;
+        }
+      }
+    });
+  };
+
   displayGrid = function(
     xoffset,
     yoffset,
@@ -323,7 +343,7 @@ export default class BootScene extends Phaser.Scene {
             tile.setFrame(0);
           });
           tile.on('pointerdown', function(pointer) {
-            shotsObj[row][col] = 1;
+            shotsObj[row][col] = 1; // update the hit
             this.scene.game.sentGame({
               row: getRowLetterByNumber(k),
               col: i
@@ -333,11 +353,14 @@ export default class BootScene extends Phaser.Scene {
               this.scene.explode('opponentBoard', row, col);
               tile.setFrame(3);
               tile.removeInteractive();
-              // now check if boat is sunk and render it...
-              if (true) {
-                this.scene.renderShips('opponentBoard', playerTwoShips, false);
-                console.log('stuff here am i');
-              }
+              // now check if any boats are sunk
+              this.scene.areShipsSunk(
+                shotsOnOpponent,
+                shotsObj,
+                playerTwoShips
+              );
+              // and add these boats to the scene
+              this.scene.renderShips('opponentBoard', playerTwoShips, true); // render any sunken ships
             }
             if (spotsOccupiedObj[row][col] === 0) {
               // It's a miss!
