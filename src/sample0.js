@@ -54,6 +54,7 @@ module.exports = {
         { row: 'f', col: 1, size: 2, sunk: false, horizontal: true }
       ]
     },
-    turn: { player: 'player', row: '', col: '' }
+    turn: { player: 'player', shot: { row: '', col: 0, hit: false } },
+    endGame: { gameOver: false, kraken: false, winner: null}
   }
 };
