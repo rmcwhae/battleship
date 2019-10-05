@@ -20,7 +20,7 @@ export default function GameContainer(props) {
       console.log("Game is now ->", props.state.gameState);
       bootScene.displayGrid
       (50, 80, props.state.gameState.boards.own, props.state.gameState.shots.own, false);
-      bootScene.renderShips('playerBoard', props.state.gameState.ships.own, false);
+      bootScene.renderShips('playerBoard', props.state.gameState.ships.own, false, false);
     }
   
   }, [props.state.gameState]);

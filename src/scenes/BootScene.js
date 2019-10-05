@@ -166,10 +166,15 @@ export default class BootScene extends Phaser.Scene {
       fill: 'green'
     });
 
-    const states = this.add.text(650 - 360 / 2, 500 , this.game.appState.serverState, {
-      font: '24pt "Inconsolata"',
-      fill: 'green'
-    });
+    const states = this.add.text(
+      650 - 360 / 2,
+      500,
+      this.game.appState.serverState,
+      {
+        font: '24pt "Inconsolata"',
+        fill: 'green'
+      }
+    );
     states.setInteractive({ useHandCursor: true });
     states.on('pointerup', () => {
       console.log('State ', this.game.appState);
@@ -190,12 +195,12 @@ export default class BootScene extends Phaser.Scene {
       true
     );
 
-    console.log("In create():", this.game.appState.gameState);
+    console.log('In create():', this.game.appState.gameState);
 
     const playerOneShips = this.game.appState.gameState.ships.own;
     // let playerTwoShips = this.game.appState.gameState.ships.opponent;
-    this.renderShips('playerBoard', playerOneShips, false);
-    this.renderShips('opponentBoard', playerTwoShips, true);
+    this.renderShips('playerBoard', playerOneShips, false, true);
+    this.renderShips('opponentBoard', playerTwoShips, true, true);
 
     const explodeconfig = {
       key: 'explode',
@@ -222,9 +227,9 @@ export default class BootScene extends Phaser.Scene {
 
     this.waitForServer = false;
 
-    console.log("In create:", this.game.appState);
+    console.log('In create:', this.game.appState);
   }
-  
+
   update() {
     let hits = 0;
     for (let i = 0; i < 6; i++) {
@@ -246,14 +251,22 @@ export default class BootScene extends Phaser.Scene {
     }
 
     // if (this.game.appState.serverState === 'RECEIVED' && this.game.appState.board_render && this.count < 100) {
-      if (this.waitForServer) {
-      console.log('in Phaser Update():', this, "status", this.game.appState.board_render, " and ", this.game.appState, this.count);
+    if (this.waitForServer) {
+      console.log(
+        'in Phaser Update():',
+        this,
+        'status',
+        this.game.appState.board_render,
+        ' and ',
+        this.game.appState,
+        this.count
+      );
       this.count += 1;
       this.game.setScene();
     }
   }
 
-  renderShips = function(board, shipsArray, onlySunk) {
+  renderShips = function(board, shipsArray, onlySunk, tweenMe) {
     let adjustmentx = 440; // hardcoded to align with opponent board
     let adjustmenty = 50;
     let frame = 0;
@@ -277,17 +290,20 @@ export default class BootScene extends Phaser.Scene {
         boats[index].x += gridDimensions.singleSquareLength / 2;
         boats[index].y -= gridDimensions.singleSquareLength / 2;
       }
-      const tween = this.tweens.add({ // let's make it look pretty
-        targets: boats[index],
-        alpha: { from: 0, to: 1 },
-        // alpha: { start: 0, to: 1 },
-        // alpha: 1,
-        // alpha: '+=1',
-        ease: 'Back',       // 'Cubic', 'Elastic', 'Bounce', 'Back'
-        duration: 2000,
-        repeat: 0,            // -1: infinity
-        yoyo: false
-    });
+      if (tweenMe) {
+        const tween = this.tweens.add({
+          // let's make it look pretty
+          targets: boats[index],
+          alpha: { from: 0, to: 1 },
+          // alpha: { start: 0, to: 1 },
+          // alpha: 1,
+          // alpha: '+=1',
+          ease: 'Back', // 'Cubic', 'Elastic', 'Bounce', 'Back'
+          duration: 2000,
+          repeat: 0, // -1: infinity
+          yoyo: false
+        });
+      }
     });
   };
 
@@ -385,7 +401,7 @@ export default class BootScene extends Phaser.Scene {
                 playerTwoShips
               );
               // and add these boats to the scene
-              this.scene.renderShips('opponentBoard', playerTwoShips, true); // render any sunken ships
+              this.scene.renderShips('opponentBoard', playerTwoShips, true, true); // render any sunken ships
             }
             if (spotsOccupiedObj[row][col] === 0) {
               // It's a miss!
