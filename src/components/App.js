@@ -37,13 +37,13 @@ export default function App() {
       <div style={{ textAlign: 'center' }}>
         <Title>Welcome to Battleship at {socketID()}</Title>
         <Title>{state.count}</Title>
-        {state.serverState === 'RECEIVED' && <Title>Received</Title>}
-        {state.serverState === 'ERROR' && <Title>Error - Aborting Game</Title> }
+        {state.containerState === 'LEVEL' && <Title>Received</Title>}
+        {state.containerState === 'ERROR' && <Title>Error - Aborting Game</Title> }
         <button onClick={() => add()}>Intermediate</button>
-        <button onClick={() => toggle()}>Toggle Static Board</button>
+        <button onClick={() => minus()}>Toggle Static Board</button>
         <button onClick={() => sentGame({turn: { player: 'server', row: 'a', col: '1'}})}>Difficult</button>
       </div>
-      <GameContainer state={state} sentGame={sentGame} setScene={setScene} />
+      <GameContainer state={state} sentGame={sentGame} setScene={setScene} gameOver={gameOver} />
     </React.Fragment>
   );
 }

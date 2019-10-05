@@ -1,5 +1,5 @@
 import { useEffect, useReducer, useState } from "react";
-import reducer, { SENT_GAME, RECEIVED_GAME, CONTAINER, SERVER, INCREMENT, DECREASE, TOGGLE, SCENE } from "./gameReducers";
+import reducer, { SENT_GAME, RECEIVED_GAME, CONTAINER, SERVER, INCREMENT, DECREASE, BOARD_RENDER } from "./gameReducers";
 import io from 'socket.io-client';
 import config from '../config';
 import sample0 from '../sample0';
@@ -12,11 +12,11 @@ export default function useApplicationData () {
 
   
   const [ state, dispatch ] = useReducer(reducer,
-    { gameState: sample0,
+    { gameState: sample0.gameState,
       count: 0,
       serverState: '',
       containerState: 'LEVEL',
-      board_render: 'true',
+      board_render: true,
       randomShots: [],
       knownShots: [],
       turn: {}
@@ -29,14 +29,17 @@ export default function useApplicationData () {
         // Create a confirmation to server this is a player
         socket.emit('player', socket.id, function ({ gameState, clientId, serverId, randomShots, knownShots, ...rest }) {
           if (socket.id === serverId) {
+            // console.log("Before emit to server and dispatch:", state.serverState);
+
             dispatch({ type: RECEIVED_GAME, serverState: 'RECEIVED', containerState: 'IN_PROGRESS', gameState, randomShots, knownShots });
-            console.log("confirmed player after reducer:", gameState, clientId, serverId, randomShots, knownShots, rest, " is now", state);
+
+            // console.log("confirmed player after reducer:", gameState, clientId, serverId, randomShots, knownShots, rest, " is now", state);
           }
         });
-        socket.on('serverFeed', feed => {
-          console.log("Received data", feed);
-          dispatch({ type: RECEIVED_GAME, gameState: feed, serverState: 'RECEIVED'});
-        });
+        // socket.on('serverFeed', feed => {
+        //   console.log("Received data", feed);
+        //   dispatch({ type: RECEIVED_GAME, gameState: feed, serverState: 'RECEIVED'});
+        // });
         socket.on('error', (error) => {
           dispatch({ type: SERVER, serverState: 'ERROR'});
           socket.emit('disconnect');
@@ -50,17 +53,15 @@ export default function useApplicationData () {
     }, []);
   
   function sentGame(newGameState) {
-    // console.log("Before emit to server:", socket.id, " with ",state.serverState);
-    // if (socket.id !== undefined && state.serverState === 'RECEIVED') {
-      socket.emit('gameFeed', newGameState, (feed) => {
-        console.log("Sucessful sent", feed);
-        dispatch({ type: SENT_GAME, gameState: newGameState, serverState: 'SENT'});
-      });
-    // }
-  };
+      // console.log("Before emit to server and dispatch:", state);
+      dispatch({ type: SENT_GAME, serverState: 'SENT', board_render: !state.board_render });
+  
+      socket.emit('gameFeed', newGameState, ({ gameState }) => {
+        // console.log("Sent shots and received callback before dispatch", state);
 
-  function setScene() {
-    dispatch({ type: SCENE, board_render: !state.board_render });
+        dispatch({ type: RECEIVED_GAME, gameState, serverState: 'RECEIVED'});
+        // console.log("Sent shots and received callback", gameState);
+      });
   };
 
   function gameOver() {
@@ -71,9 +72,13 @@ export default function useApplicationData () {
   function socketID() {
     return socket && socket.id;
   };
+
+  function setScene() {
+    dispatch({ type: BOARD_RENDER, board_render: !state.board_render });
+  };
   
-  function setServer(newServerState) {
-    dispatch({ type: SERVER, serverState: newServerState});
+  function setServer(newserverState) {
+    dispatch({ type: SERVER, serverState: newserverState});
   };
 
   function setContainer(newContainerState) {
@@ -84,16 +89,7 @@ export default function useApplicationData () {
 
   const add = () => dispatch({ type: INCREMENT });
 
-  function toggle(){
-    if (staticGame === true) {
-      console.log()
-      staticGame = false;
-      dispatch({ type: TOGGLE, gameState: sample0 });
-    } else {
-      staticGame = true;
-      dispatch({ type: TOGGLE, gameState: sample1  })
-    }
+  return { state, dispatch, sentGame, setScene, gameOver, socketID, setContainer, add, minus
+    // , toggle
   };
-
-  return { state, dispatch, sentGame, setScene, gameOver, socketID, setContainer, add, minus, toggle };
 };

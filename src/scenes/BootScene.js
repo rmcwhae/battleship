@@ -5,9 +5,10 @@ import explosionImg from '../assets/explosion.png';
 import explosionImgBlue from '../assets/explosion_blue.png';
 import config from '../config';
 import io from 'socket.io-client';
-import sample from '../sample0';
+import data from '../sample0';
 import { SENT_GAME } from '../hooks/gameReducers';
 
+const sample = data.gameState;
 const socket = io(config.API_PATH);
 
 const gridDimensions = {
@@ -107,8 +108,8 @@ const nextChar = function(c) {
   return String.fromCharCode(c.charCodeAt(0) + 1);
 };
 
-const playerSpotsOccupied = sample.gameState.boards.own;
-// const opponentSpotsOccupied = sample.gameState.boards.opponent;
+const playerSpotsOccupied = sample.boards.own;
+// const opponentSpotsOccupied = sample.boards.opponent;
 let opponentSpotsOccupied = {
   a: [0, 0, 0, 0, 0, 0],
   b: [0, 0, 0, 0, 0, 0],
@@ -120,8 +121,8 @@ let opponentSpotsOccupied = {
 
 let playerTwoShips = distributeShips(opponentSpotsOccupied);
 
-let shotsOnPlayerOne = sample.gameState.shots.opponent;
-let shotsOnOpponent = sample.gameState.shots.own;
+let shotsOnPlayerOne = sample.shots.opponent;
+let shotsOnOpponent = sample.shots.own;
 
 export default class BootScene extends Phaser.Scene {
   constructor(props) {
@@ -160,17 +161,18 @@ export default class BootScene extends Phaser.Scene {
       font: '24pt "Inconsolata"',
       fill: 'green'
     });
-    leftTitle.setInteractive({ useHandCursor: true });
-    leftTitle.on('pointerup', () => {
-      console.log('Bootscene ', this.game.state.count);
-      this.game.setState({
-        ...this.game.state,
-        count: this.game.state.count - 1
-      });
-    });
     const rightTitle = this.add.text(650 - 360 / 2, 0, 'Opponent', {
       font: '24pt "Inconsolata"',
       fill: 'green'
+    });
+
+    const states = this.add.text(650 - 360 / 2, 500 , this.game.appState.serverState, {
+      font: '24pt "Inconsolata"',
+      fill: 'green'
+    });
+    states.setInteractive({ useHandCursor: true });
+    states.on('pointerup', () => {
+      console.log('State ', this.game.appState);
     });
 
     const playerBoard = this.displayGrid(
@@ -188,10 +190,10 @@ export default class BootScene extends Phaser.Scene {
       true
     );
 
-    // console.log("In create():", this.game.appState.gameState.gameState.boards.own);
+    console.log("In create():", this.game.appState.gameState);
 
-    const playerOneShips = this.game.appState.gameState.gameState.ships.own;
-    // let playerTwoShips = this.game.appState.gameState.gameState.ships.opponent;
+    const playerOneShips = this.game.appState.gameState.ships.own;
+    // let playerTwoShips = this.game.appState.gameState.ships.opponent;
     this.renderShips('playerBoard', playerOneShips, false);
     this.renderShips('opponentBoard', playerTwoShips, true);
 
@@ -217,7 +219,12 @@ export default class BootScene extends Phaser.Scene {
 
     this.anims.create(explodeconfig);
     this.anims.create(explodeconfigBlue);
+
+    this.waitForServer = false;
+
+    console.log("In create:", this.game.appState);
   }
+  
   update() {
     let hits = 0;
     for (let i = 0; i < 6; i++) {
@@ -235,6 +242,14 @@ export default class BootScene extends Phaser.Scene {
     if (hits === 10) {
       console.log('end game');
       this.scene.pause(); // works
+      this.game.gameOver(); //hook for disconnect sockets and close game
+    }
+
+    // if (this.game.appState.serverState === 'RECEIVED' && this.game.appState.board_render && this.count < 100) {
+      if (this.waitForServer) {
+      console.log('in Phaser Update():', this, "status", this.game.appState.board_render, " and ", this.game.appState, this.count);
+      this.count += 1;
+      this.game.setScene();
     }
   }
 
