@@ -111,7 +111,6 @@ const nextChar = function(c) {
   return String.fromCharCode(c.charCodeAt(0) + 1);
 };
 
-
 // let opponentSpotsOccupied = {
 //   a: [0, 0, 0, 0, 0, 0],
 //   b: [0, 0, 0, 0, 0, 0],
@@ -301,11 +300,18 @@ export default class BootScene extends Phaser.Scene {
     }
     // now display them
     shipsArray.forEach((ship, index) => {
+      let frame = 0;
+      if (ship.hit && !ship.sunk) {
+        frame = 1;
+      }
+      if (ship.sunk) {
+        frame = 2;
+      }
       boats[index] = this.add.sprite(
         ship.col * gridDimensions.singleSquareLength + adjustmentx,
         rowNumbers[ship.row] * gridDimensions.singleSquareLength + adjustmenty,
         'greenBoat',
-        ship.sunk ? (frame = 3) : (frame = 0)
+        (frame = frame)
       );
       if (ship.horizontal) {
         boats[index].angle = 90;
