@@ -1,23 +1,33 @@
 import * as React from 'react';
 import Game from './Game';
 // import App from './App.jsx';
-
+let bootScene = undefined;
 
 export default function GameContainer(props) {
-  console.log("Game Container's create Game has", props.state.count, "clicks");
+  // console.log("Game Container's create Game has", props.state.count, "clicks");
 
   const [game, setGame] = React.useState();
-  React.useEffect(() => {
-    setGame(new Game({state: props.state, setState: props.setState}));
-  }, [])
 
   React.useEffect(() => {
-    console.log("Game is now ->", typeof game, game);
+    // console.log("Before game:", props);
+    setGame(new Game({ appState: props.state, sentGame: props.sentGame, setScene: props.setScene, gameOver: props.gameOver }));
+  }, []);
+
+  React.useEffect(() => {
     game && game.setProps(props);
-  }, [props.state]);
+    if (bootScene) {
+      console.log("Checking scene in Container:", props);
+      console.log("Game is now ->", props.state.gameState);
+      bootScene.displayGrid
+      (50, 80, props.state.gameState.boards.own, props.state.gameState.shots.own, false);
+      bootScene.renderShips('playerBoard', props.state.gameState.ships.own, false, false);
+    }
+  
+  }, [props.state.gameState]);
 
-    console.log("Game Container's render");
+  bootScene = game && game.scene.getScene('Boot');
 
+ 
   return (
     <section className="phaser-container" id="battleship" />
   );

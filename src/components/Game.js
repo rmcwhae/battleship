@@ -15,14 +15,17 @@ const config = {
 export default class Game extends Phaser.Game {
   // constructor (gameConfig) {
   constructor (props) {
-    console.log("Before super", props);
+    // console.log("Before super", props);
     super(config);
+    this.sentGame = props.sentGame;
+    this.gameOver = props.gameOver;
+    this.setScene = props.setScene;
+    this.appState = props.appState;
 
-    this.setState = props.setState;
-    // this.scene.add('Boot', new BootScene({state: props.state, setState: props.setState}));
     this.scene.add('Boot', BootScene);
     this.scene.start('Boot');
-      console.log("Successful constructor:", this);
+
+      console.log("Successful constructor:", this, props);
   }
 
   getGame() {
@@ -30,7 +33,10 @@ export default class Game extends Phaser.Game {
   }
 
   setProps(props) {
-    this.state = props.state;
+    this.appState = props.state;
+    // this.scene.resume('Boot');
+
+    // console.log("in setProps:", this, 'and', props);
   }
 };
  
