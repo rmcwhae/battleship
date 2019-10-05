@@ -18,12 +18,14 @@ export default class Game extends Phaser.Game {
     // console.log("Before super", props);
     super(config);
     this.sentGame = props.sentGame;
+    this.gameOver = props.gameOver;
+    this.setScene = props.setScene;
     this.appState = props.appState;
-    // this.scene.add('Boot', new BootScene({state: props.state, setState: props.setState}));
+
     this.scene.add('Boot', BootScene);
     this.scene.start('Boot');
 
-      // console.log("Successful constructor:", this);
+      console.log("Successful constructor:", this, props);
   }
 
   getGame() {
