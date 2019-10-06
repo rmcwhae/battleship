@@ -270,7 +270,9 @@ export default class BootScene extends Phaser.Scene {
     }
     const endGameMsg = this.add.text(100, 0, winmsg, {
       font: '120pt "Inconsolata"',
-      fill: 'green'
+      fill: 'green',
+      stroke: '#000000',
+      strokeThickness: 6
     });
     rightTiles.forEach(tile => tile.removeInteractive()); // disable further clicking on tiles
     const tween = this.tweens.add({
@@ -280,8 +282,8 @@ export default class BootScene extends Phaser.Scene {
       // alpha: { start: 0, to: 1 },
       // alpha: 1,
       // alpha: '+=1',
-      ease: 'Elastic', // 'Cubic', 'Elastic', 'Bounce', 'Back'
-      duration: 2000,
+      ease: 'Bounce', // 'Cubic', 'Elastic', 'Bounce', 'Back'
+      duration: 1000,
       repeat: 0, // -1: infinity
       yoyo: true
     });
