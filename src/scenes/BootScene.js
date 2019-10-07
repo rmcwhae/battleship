@@ -287,6 +287,9 @@ export default class BootScene extends Phaser.Scene {
       repeat: 0, // -1: infinity
       yoyo: true
     });
+    setTimeout(() => {
+      this.scene.pause();
+    }, 3000); // pause after win/lose text to prevent CPU spike
   };
 
   renderShips = function(board, shipsArray, onlySunk, tweenMe) {
