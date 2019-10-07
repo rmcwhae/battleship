@@ -190,10 +190,6 @@ export default class BootScene extends Phaser.Scene {
       // let's make it look pretty
       targets: endGameMsg,
       alpha: { from: 0, to: 1 },
-      // alpha: { start: 0, to: 1 },
-      // alpha: 1,
-      // alpha: '+=1',
-      ease: 'Bounce', // 'Cubic', 'Elastic', 'Bounce', 'Back'
       duration: 1000,
       repeat: 0, // -1: infinity
       yoyo: false
@@ -301,7 +297,6 @@ export default class BootScene extends Phaser.Scene {
       for (let k = 0; k < 6; k++) {
         let tile = this.add.sprite(60 * i + xoffset, 60 * k + yoffset, 'water');
         rightTiles.push(tile);
-        console.log("stuff and things");
 
         const row = getRowLetterByNumber(k);
         const col = i;
@@ -314,7 +309,9 @@ export default class BootScene extends Phaser.Scene {
           tile.setFrame(2); // it's a miss!
         } else if (opponentBoardFlag) {
           // && turn?
-          tile.setInteractive(); // let's blow stuff up!
+          tile.setInteractive({
+            useHandCursor: true
+          }); // let's blow stuff up!
         }
 
         if (opponentBoardFlag) {
@@ -336,10 +333,7 @@ export default class BootScene extends Phaser.Scene {
               tile.setFrame(3);
               tile.removeInteractive();
               // now check if any boats are sunk
-              this.scene.areShipsSunk(
-                shotsObj,
-                playerTwoShips
-              );
+              this.scene.areShipsSunk(shotsObj, playerTwoShips);
               // and add these boats to the scene
               this.scene.renderShips(
                 'opponentBoard',
