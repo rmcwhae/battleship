@@ -32,6 +32,14 @@ export default function App() {
     text-align: center;
   `;
 
+  const TitleClickable = styled.h2`
+  font-family: 'Inconsolata', monospace;
+  font-size: 1.5em;
+  text-align: center;
+  color: lime;
+  text-align: center;
+  cursor: pointer;
+`;
   
   return (
     <React.Fragment>
@@ -41,7 +49,7 @@ export default function App() {
         {state.containerState === 'LEVEL' && <Title>Received</Title>}
         <button onClick={() => minus()}>Toggle Static Board</button>
         {state.containerState === 'GAME_OVER' && 
-          <Title onClick={() => reset()}>Restart Battleship</Title>}
+          <TitleClickable onClick={() => reset()}>Restart Battleship</TitleClickable>}
         <button onClick={() => add()}>Difficult</button>
       </div>
       {state.containerState !== 'LEVEL' && <GameContainer state={state} sentGame={sentGame} setScene={setScene} gameOver={gameOver} />}
