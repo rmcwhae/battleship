@@ -16,10 +16,10 @@ export default function useApplicationData () {
       count: 0,
       serverState: '',
       containerState: 'LEVEL',
-      board_render: true,
-      randomShots: [],
-      knownShots: [],
-      turn: {}
+      turn: {},
+      endGame: { gameOver: false,
+                 winner: ''
+               }
     });
 
     useEffect(() => {
@@ -60,7 +60,7 @@ export default function useApplicationData () {
         // console.log("Sent shots and received callback before dispatch", state);
 
         dispatch({ type: RECEIVED_GAME, gameState, serverState: 'RECEIVED'});
-        // console.log("Sent shots and received callback", gameState);
+        console.log("Sent shots and received callback", gameState);
       });
   };
 
