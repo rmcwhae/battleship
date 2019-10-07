@@ -13,17 +13,20 @@ export default function GameContainer(props) {
     setGame(
       new Game({
         appState: props.state,
-        sentGame: props.sentGame,
-        setScene: props.setScene,
+        sentGame: props.sentGame
       })
     );
   }, []);
 
   React.useEffect(() => {
+    if (props.state.reset) {
+      // console.log("Destroy game");
+      game.destroy(bootScene, true);
+    }    
     game && game.setProps(props);
     if (bootScene) {
-      console.log('Checking scene in Container:', props);
-      console.log('Game is now ->', props.state.gameState);
+      // console.log('Checking scene in Container:', props);
+      // console.log('Game is now ->', game, " with state", props.state.gameState);
       bootScene.displayGrid(
         50,
         80,
@@ -50,11 +53,7 @@ export default function GameContainer(props) {
           );
         props.gameOver();
       } // check if game is over then change state to render reset
-    }
-
-    if (props.state.reset) {
-      game.destroy(true);
-    }          
+    }      
   }, [props.state.gameState, props.state.reset]);
 
   bootScene = game && game.scene.getScene('Boot');

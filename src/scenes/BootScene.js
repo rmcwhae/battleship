@@ -183,6 +183,8 @@ export default class BootScene extends Phaser.Scene {
     const playerSpotsOccupied = this.game.appState.gameState.boards.own;
     const opponentSpotsOccupied = this.game.appState.gameState.boards.opponent;
 
+    shotsOnOpponent = this.game.appState.gameState.shots.opponent;
+
     const playerBoard = this.displayGrid(
       50,
       80,
@@ -274,9 +276,9 @@ export default class BootScene extends Phaser.Scene {
       repeat: 0, // -1: infinity
       yoyo: false
     });
-    rightTiles = [];
-  };
 
+  };
+  
   renderShips = function(board, shipsArray, onlySunk, tweenMe) {
     let adjustmentx = 440; // hardcoded to align with opponent board
     let adjustmenty = 50;

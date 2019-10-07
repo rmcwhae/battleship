@@ -24,6 +24,13 @@ export default function useApplicationData () {
           console.log("Reset?", state.reset, " for ", socket);
           if (state.reset) {
             socket.connect();
+
+            dispatch({ type: RESET, gameState: sample0.gameState,
+              serverState: '',
+              containerState: 'LEVEL',
+              turn: {}
+            });
+        
           }
 
       socket.on('connect', () => {
@@ -68,16 +75,11 @@ export default function useApplicationData () {
   };
 
   function reset() {
-    console.log("Before disconnect", socket);
-    socket.disconnect();
-    console.log("In after disconnect", socket);
-    dispatch({ type: RESET, gameState: sample0.gameState,
-      serverState: '',
-      containerState: 'LEVEL',
-      reset: true,
-      turn: {}
+    dispatch({ type: RESET, 
+      reset: true
     });
 
+    socket.disconnect();
   };
 
   function socketID() {

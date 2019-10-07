@@ -9,7 +9,7 @@ export const DECREASE = 'DECREASE';
 export default function reducer(
   state = initState,
   {type, ...payload}) {
-    console.log("In reducer:", type, "& Payload", payload, ' to update current state', state);
+    // console.log("In reducer:", type, "& Payload", payload, ' to update current state', state);
 
   switch (type) {
 
