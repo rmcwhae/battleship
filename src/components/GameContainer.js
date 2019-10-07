@@ -38,7 +38,12 @@ export default function GameContainer(props) {
         false,
         false
       );
-      bootScene.explode('playerBoard', props.state.gameState.turn.shot.row, props.state.gameState.turn.shot.col, !props.state.gameState.turn.shot.hit); // give animation of red or blue explosion
+      bootScene.explode(
+        'playerBoard',
+        props.state.gameState.turn.shot.row,
+        props.state.gameState.turn.shot.col,
+        !props.state.gameState.turn.shot.hit
+      ); // give animation of red or blue explosion
     }
   }, [props.state.gameState]);
 
