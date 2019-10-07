@@ -14,15 +14,15 @@ export default function App() {
     dispatch,
     add,
     minus,
-    toggle,
     setScene,
     gameOver,
+    reset,
     socketID,
     sentGame,
     setContainer
   } = useApplicationData();
 
-  // console.log("App.js before render - server:", state.serverState, ", container:", state.containerState, ", game:", state.gameState);
+  console.log("App.js before render - state:", state, ", container:", state.containerState);
 
   const Title = styled.h2`
     font-family: 'Inconsolata', monospace;
@@ -32,18 +32,19 @@ export default function App() {
     text-align: center;
   `;
 
+  
   return (
     <React.Fragment>
       <div style={{ textAlign: 'center' }}>
         <Title>Welcome to Battleship at {socketID()}</Title>
         <Title>{state.count}</Title>
         {state.containerState === 'LEVEL' && <Title>Received</Title>}
-        {state.containerState === 'ERROR' && <Title>Error - Aborting Game</Title> }
-        <button onClick={() => add()}>Intermediate</button>
         <button onClick={() => minus()}>Toggle Static Board</button>
-        <button onClick={() => sentGame({turn: { player: 'server', row: 'a', col: '1'}})}>Difficult</button>
+        {state.containerState === 'GAME_OVER' && 
+          <Title onClick={() => reset()}>Restart Battleship</Title>}
+        <button onClick={() => add()}>Difficult</button>
       </div>
-      <GameContainer state={state} sentGame={sentGame} setScene={setScene} gameOver={gameOver} />
+      {state.containerState !== 'LEVEL' && <GameContainer state={state} sentGame={sentGame} setScene={setScene} gameOver={gameOver} />}
     </React.Fragment>
   );
 }

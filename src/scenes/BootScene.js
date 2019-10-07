@@ -234,19 +234,6 @@ export default class BootScene extends Phaser.Scene {
   }
 
   update() {
-    if (this.game.appState.gameState.endGame.gameOver) {
-      // console.log('Game over dude; winner:', this.game.appState.gameState.endGame.winner);
-      this.gameOverSequence(
-        this.game.appState.gameState.endGame.winner === 'player'
-      ); //hook for disconnect sockets and close game
-      // const freezeEnd = this.time.delayedCall(
-      //   1000,
-      //   this.scene.pause(),
-      //   null,
-      //   this
-      // );
-    }
-
     // if (this.game.appState.serverState === 'RECEIVED' && this.game.appState.board_render && this.count < 100) {
     if (this.waitForServer) {
       console.log(
@@ -285,11 +272,9 @@ export default class BootScene extends Phaser.Scene {
       ease: 'Bounce', // 'Cubic', 'Elastic', 'Bounce', 'Back'
       duration: 1000,
       repeat: 0, // -1: infinity
-      yoyo: true
+      yoyo: false
     });
-    setTimeout(() => {
-      this.scene.pause();
-    }, 3000); // pause after win/lose text to prevent CPU spike
+    rightTiles = [];
   };
 
   renderShips = function(board, shipsArray, onlySunk, tweenMe) {

@@ -18,7 +18,6 @@ export default class Game extends Phaser.Game {
     // console.log("Before super", props);
     super(config);
     this.sentGame = props.sentGame;
-    this.gameOver = props.gameOver;
     this.setScene = props.setScene;
     this.appState = props.appState;
 

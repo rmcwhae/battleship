@@ -15,7 +15,6 @@ export default function GameContainer(props) {
         appState: props.state,
         sentGame: props.sentGame,
         setScene: props.setScene,
-        gameOver: props.gameOver
       })
     );
   }, []);
@@ -44,8 +43,19 @@ export default function GameContainer(props) {
         props.state.gameState.turn.shot.col,
         !props.state.gameState.turn.shot.hit
       ); // give animation of red or blue explosion
+
+      if (props.state.gameState.endGame.gameOver) {
+        bootScene.gameOverSequence(
+          props.state.gameState.endGame.winner === 'player'
+          );
+        props.gameOver();
+      } // check if game is over then change state to render reset
     }
-  }, [props.state.gameState]);
+
+    if (props.state.reset) {
+      game.destroy(true);
+    }          
+  }, [props.state.gameState, props.state.reset]);
 
   bootScene = game && game.scene.getScene('Boot');
 
