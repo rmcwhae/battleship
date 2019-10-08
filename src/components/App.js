@@ -52,9 +52,9 @@ export default function App() {
     border-radius: 3px;
 
     &:hover {
-      color: white;
-      border-color: white;
-      background: #333;
+      color: #218ffd;
+      border-color: #218ffd;
+      background: #00152a;
     }
   `;
 

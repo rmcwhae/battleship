@@ -3,6 +3,7 @@ import greenBoatImg from '../assets/green_battleship_sprite.png';
 import waterImg from '../assets/battleship_sprite_water.png';
 import explosionImg from '../assets/explosion.png';
 import explosionImgBlue from '../assets/explosion_blue.png';
+import krakenImg from '../assets/kraken_sprite.png';
 import config from '../config';
 import io from 'socket.io-client';
 import data from '../sample0';
@@ -24,6 +25,8 @@ let shotsOnPlayerOne = [];
 let shotsOnOpponent = [];
 let playerSpotsOccupied = [];
 let opponentSpotsOccupied = [];
+let krakenSprite;
+let cursors; // remove me?
 
 const emptyBoard = {
   a: [1, 1, 0, 0, 0, 0],
@@ -88,9 +91,16 @@ export default class BootScene extends Phaser.Scene {
       frameWidth: 60,
       frameHeight: 60
     });
+    this.load.spritesheet('kraken', krakenImg, {
+      frameWidth: 96,
+      frameHeight: 128
+    });
   }
 
   create() {
+    //  Input Events
+    cursors = this.input.keyboard.createCursorKeys();
+
     const leftTitle = this.add.text(200 - 360 / 2, 0, 'Your Ships', {
       font: '24pt "Inconsolata"',
       fill: 'lime'
@@ -120,6 +130,8 @@ export default class BootScene extends Phaser.Scene {
       shotsOnOpponent,
       true
     );
+
+    this.addKraken();
 
     console.log('In create():', this.game.appState.gameState);
 
@@ -151,12 +163,23 @@ export default class BootScene extends Phaser.Scene {
     this.anims.create(explodeconfig);
     this.anims.create(explodeconfigBlue);
 
+    this.anims.create({
+      key: 'left',
+      frames: this.anims.generateFrameNumbers('kraken', { start: 7, end: 12 }),
+      frameRate: 10,
+      repeat: -1
+    });
+
     this.waitForServer = false;
 
     console.log('In create:', this.game.appState);
   }
 
   update() {
+    if (cursors.left.isDown) {
+      krakenSprite.anims.play('left', true);
+    }
+
     // if (this.game.appState.serverState === 'RECEIVED' && this.game.appState.board_render && this.count < 100) {
     if (this.waitForServer) {
       console.log(
@@ -172,6 +195,10 @@ export default class BootScene extends Phaser.Scene {
       this.game.setScene();
     }
   }
+
+  addKraken = function(x = 300, y = 100) {
+    krakenSprite = this.add.sprite(x, y, 'kraken', 7);
+  };
 
   gameOverSequence = function(win) {
     let winmsg = 'You Lose';
