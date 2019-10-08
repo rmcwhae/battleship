@@ -35,6 +35,8 @@ export default function App() {
     font-size: 1.5em;
     text-align: center;
     color: lime;
+    width: 61%;
+    margin: 10px auto;
   `;
 
   const TitleClickable = styled.h2`
@@ -44,7 +46,7 @@ export default function App() {
     color: lime;
     cursor: pointer;
     padding: 20px 5%;
-    width: 50%;
+    width: 51%;
     margin: 10px auto;
     border: 1px solid lime;
     border-radius: 3px;
@@ -62,7 +64,7 @@ export default function App() {
     text-align: justify;
     color: lime;
     margin: 20px auto;
-    width: 60%;
+    width: 61%;
   `;
 
   return (
