@@ -5,7 +5,7 @@ const config = {
   type: Phaser.AUTO,
   parent: 'phaser-example',
   width: 850,
-  height: 600,
+  height: 450,
   scale: {
     // mode: Phaser.Scale.FIT,
     autoCenter: Phaser.Scale.CENTER_HORIZONTALLY
