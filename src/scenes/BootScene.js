@@ -27,7 +27,6 @@ let playerSpotsOccupied = [];
 let opponentSpotsOccupied = [];
 let krakenSprite;
 let finalBoat1, finalBoat2, finalBoat3;
-let cursors; // remove me?
 
 const emptyBoard = {
   a: [1, 1, 0, 0, 0, 0],
@@ -99,8 +98,6 @@ export default class BootScene extends Phaser.Scene {
   }
 
   create() {
-    //  Input Events
-    cursors = this.input.keyboard.createCursorKeys();
 
     const leftTitle = this.add.text(200 - 360 / 2, 0, 'Your Ships', {
       font: '24pt "Inconsolata"',
@@ -132,7 +129,7 @@ export default class BootScene extends Phaser.Scene {
       true
     );
 
-    console.log('In create():', this.game.appState.gameState);
+    // console.log('In create():', this.game.appState.gameState);
 
     playerOneShips = this.game.appState.gameState.ships.own;
     playerTwoShips = this.game.appState.gameState.ships.opponent;
@@ -171,13 +168,10 @@ export default class BootScene extends Phaser.Scene {
 
     this.waitForServer = false;
 
-    console.log('In create:', this.game.appState);
+    // console.log('In create:', this.game.appState);
   }
 
   update() {
-    // if (cursors.left.isDown) {
-    //   krakenSprite.anims.play('left', true);
-    // }
 
     // if (this.game.appState.serverState === 'RECEIVED' && this.game.appState.board_render && this.count < 100) {
     if (this.waitForServer) {

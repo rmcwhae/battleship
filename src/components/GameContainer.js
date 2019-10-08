@@ -19,7 +19,7 @@ export default function GameContainer(props) {
   }, []);
 
   React.useEffect(() => {
-    console.log("in container", props.state);
+    // console.log("in container", props.state);
 
     game && game.setProps(props);
     if (bootScene) {

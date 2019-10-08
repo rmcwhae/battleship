@@ -29,7 +29,7 @@ export default function useApplicationData() {
 
     useEffect(() => {
       if (state.reset) {
-        console.log("Reset?", state.reset, "level:", state.level, " for ", state);
+        // console.log("Reset?", state.reset, "level:", state.level, " for ", state);
 
         dispatch({ type: RESET, 
           gameState: sample0.gameState,
@@ -38,16 +38,16 @@ export default function useApplicationData() {
           turn: {}
         });
       }
-      console.log("Reset?", state.reset, "level:", state.level, " for ", state);
+      // console.log("Reset?", state.reset, "level:", state.level, " for ", state);
 
       if (state.level) {
         if (state.serverState === '' || socket.connected) {
           socket.disconnect();
           socket.connect();
-          console.log('Game level is ', state.level);
+          // console.log('Game level is ', state.level);
         };
         socket.on('connect', () => {
-          console.log('Connect ', socket.id);
+          // console.log('Connect ', socket.id);
 
           if (state.clean !== undefined) {
                     // game.destroy(bootScene, true);
@@ -62,7 +62,7 @@ export default function useApplicationData() {
             if (socket.id === serverId) {
               dispatch({ type: RECEIVED_GAME, serverState: RECEIVED, containerState: IN_PROGRESS, gameState });
 
-              console.log("confirmed player after reducer:", gameState, clientId, serverId, rest, " is now", state);
+              // console.log("confirmed player after reducer:", gameState, clientId, serverId, rest, " is now", state);
             }
           });
         });
@@ -80,7 +80,7 @@ export default function useApplicationData() {
   };
 
   function reset() {
-    console.log("Before reset:", state);
+    // console.log("Before reset:", state);
 
     dispatch({ type: RESET, 
       reset: true,

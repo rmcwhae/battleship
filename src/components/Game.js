@@ -19,18 +19,18 @@ export default class Game extends Phaser.Game {
     super(config);
     this.sentGame = props.sentGame;
     this.appState = props.appState;
-    console.log("Constructor before add scene", this);
+    // console.log("Constructor before add scene", this);
 
     this.scene.add('Boot', new BootScene());
     this.scene.start('Boot');
-    console.log("Constructor after add/start scene:", this);
+    // console.log("Constructor after add/start scene:", this);
   }
 
   destroy(bootScene, canvas, noReturn = false) {
-    console.log("Destroy current game", this);
+    // console.log("Destroy current game", this);
 
     // bootScene.destroyGame();
-    console.log("Destroy current game", this);
+    // console.log("Destroy current game", this);
     return super.destroy(canvas, noReturn);
   }
 
