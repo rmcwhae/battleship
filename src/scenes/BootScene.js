@@ -326,10 +326,12 @@ export default class BootScene extends Phaser.Scene {
       gridDimensions.singleSquareLength * rowNumbers[row] + adjustmenty;
     if (!blue) {
       const boom = this.add.sprite(xcoord, ycoord, 'boom');
+      boom.angle = Phaser.Math.Between(-90, 90);
       boom.anims.play('explode');
     } else {
       const boomBlue = this.add.sprite(xcoord, ycoord, 'boomBlue');
       boomBlue.anims.play('explodeBlue');
+      boomBlue.angle = Phaser.Math.Between(-90, 90);
     }
   };
 
