@@ -74,12 +74,12 @@ export default function App() {
         <Title>Welcome to Pirate Battleship!</Title>
         <img src={introImg} style={{ height: '200px' }}></img>
         <IntroPara>
-          In this take on the classic Battleship game, you and the pirate hive
-          mind both start with five ships randomly distributed across a 6x6
-          grid. You will then take turns firing shots at each other, with each
-          boat requiring two hits to sink. The first to sink all five of the
-          other’s ships wins. Be careful not to anger the Kraken with careless
-          bombardment, however…
+          In this take on the classic Battleship game, you will square off
+          against the Kraken. You both start with five ships randomly
+          distributed across a 6x6 grid. You will take turns firing shots at each
+          other, with each boat requiring two hits to sink. The first to sink all five
+          of the other’s ships wins. Be careful not to anger the Kraken with
+          careless bombardment, however…
         </IntroPara>
         {state.containerState === LOADING && <Title>{socketReady()}</Title>}
         {state.containerState === LOADING && (
@@ -98,7 +98,10 @@ export default function App() {
           </TitleClickable>
         )}
         {state.containerState === IN_PROGRESS && (
-          <Title>Sink your opponent’s ships. Playing on difficulty level: {state.level}</Title>
+          <Title>
+            Sink your opponent’s ships. Playing on difficulty level:{' '}
+            {state.level}
+          </Title>
         )}
         {state.containerState === GAME_OVER && (
           <TitleClickable onClick={() => reset()}>
