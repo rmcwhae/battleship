@@ -30,6 +30,15 @@ export default function App() {
 
   // console.log("App.js before render - state:", state, ", container:", state.containerState);
 
+  const EnormousTitle = styled.h1`
+    font-family: 'Inconsolata', monospace;
+    font-size: 3em;
+    text-align: center;
+    color: lime;
+    width: 61%;
+    margin: 10px auto;
+  `;
+
   const Title = styled.h2`
     font-family: 'Inconsolata', monospace;
     font-size: 1.5em;
@@ -72,7 +81,7 @@ export default function App() {
       <div style={{ textAlign: 'center' }}>
         {state.containerState === 'LEVEL' && <Title>Received</Title>}
         {state.containerState === LOADING && (
-          <Title>Welcome to Pirate Battleship!</Title>
+          <EnormousTitle>Welcome to Pirate Battleship!</EnormousTitle>
         )}
         {state.containerState === LOADING && (
           <img src={introImg} style={{ height: '148px' }}></img>
