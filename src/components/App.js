@@ -96,7 +96,7 @@ export default function App() {
           </TitleClickable>
         )}
         {state.containerState === IN_PROGRESS && (
-          <Title>Sink your opponent’s ships</Title>
+          <Title>Sink your opponent’s ships. Playing on difficulty level: {state.level}</Title>
         )}
         {state.containerState === GAME_OVER && (
           <TitleClickable onClick={() => reset()}>
