@@ -93,11 +93,11 @@ export default class BootScene extends Phaser.Scene {
   create() {
     const leftTitle = this.add.text(200 - 360 / 2, 0, 'Your Ships', {
       font: '24pt "Inconsolata"',
-      fill: 'green'
+      fill: 'lime'
     });
     const rightTitle = this.add.text(650 - 360 / 2, 0, 'Opponent', {
       font: '24pt "Inconsolata"',
-      fill: 'green'
+      fill: 'lime'
     });
 
     // set these from the server
