@@ -27,6 +27,7 @@ let playerSpotsOccupied = [];
 let opponentSpotsOccupied = [];
 let krakenSprite;
 let finalBoat1, finalBoat2, finalBoat3;
+const creditsMessage = "Created by Mike Chui and Russell McWhae in October 2019.";
 
 const emptyBoard = {
   a: [1, 1, 0, 0, 0, 0],
@@ -237,7 +238,8 @@ export default class BootScene extends Phaser.Scene {
       // let's make it look pretty
       targets: endGameMsg,
       alpha: { from: 0, to: 1 },
-      duration: 1000,
+      ease: 'Bounce',
+      duration: 2000,
       repeat: 0, // -1: infinity
       yoyo: false
     });
@@ -248,6 +250,18 @@ export default class BootScene extends Phaser.Scene {
       this.explodeAll('opponentBoard', true);
       const victoryAnimation = this.victoryBoats();
     }
+    const credits = this.add.text(135, 420, creditsMessage, {
+      font: '16pt "Inconsolata"',
+      fill: 'lime'
+    });
+    const creditsTween = this.tweens.add({
+      // let's make it look pretty
+      targets: credits,
+      alpha: { from: 0, to: 1 },
+      duration: 5000,
+      repeat: 0, // -1: infinity
+      yoyo: false
+    });
   };
 
   renderShips = function(board, shipsArray, onlySunk, tweenMe) {
