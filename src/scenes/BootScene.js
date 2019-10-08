@@ -182,7 +182,7 @@ export default class BootScene extends Phaser.Scene {
       font: '120pt "Inconsolata"',
       fill: 'green',
       stroke: '#000000',
-      strokeThickness: 6
+      strokeThickness: 12
     });
     rightTiles.forEach(tile => tile.removeInteractive()); // disable further clicking on tiles
     rightTiles = [];
