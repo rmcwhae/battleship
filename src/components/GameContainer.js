@@ -13,18 +13,18 @@ export default function GameContainer(props) {
     setGame(
       new Game({
         appState: props.state,
-        sentGame: props.sentGame,
-        setScene: props.setScene,
-        gameOver: props.gameOver
+        sentGame: props.sentGame
       })
     );
   }, []);
 
   React.useEffect(() => {
+    // console.log("in container", props.state);
+
     game && game.setProps(props);
     if (bootScene) {
-      console.log('Checking scene in Container:', props);
-      console.log('Game is now ->', props.state.gameState);
+      // console.log('Checking scene in Container:', props);
+      // console.log('Game is now ->', game, " with state", props.state.gameState);
       bootScene.displayGrid(
         50,
         80,
@@ -38,9 +38,23 @@ export default function GameContainer(props) {
         false,
         false
       );
-      bootScene.explode('playerBoard', props.state.gameState.turn.shot.row, props.state.gameState.turn.shot.col, !props.state.gameState.turn.shot.hit); // give animation of red or blue explosion
-    }
-  }, [props.state.gameState]);
+      bootScene.explode(
+        'playerBoard',
+        props.state.gameState.turn.shot.row,
+        props.state.gameState.turn.shot.col,
+        !props.state.gameState.turn.shot.hit
+      ); // give animation of red or blue explosion
+
+      if (props.state.gameState.endGame.gameOver) {
+        bootScene.gameOverSequence(
+          props.state.gameState.endGame.winner === 'player'
+          );
+        props.gameOver();
+        // game.destroy(bootScene, true);
+        props.setClean({game, bootScene });
+      } // check if game is over then change state to render reset
+    }      
+  }, [props.state.gameState, props.state.level]);
 
   bootScene = game && game.scene.getScene('Boot');
 

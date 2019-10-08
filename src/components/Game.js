@@ -5,7 +5,7 @@ const config = {
   type: Phaser.AUTO,
   parent: 'phaser-example',
   width: 850,
-  height: 600,
+  height: 450,
   scale: {
     // mode: Phaser.Scale.FIT,
     autoCenter: Phaser.Scale.CENTER_HORIZONTALLY
@@ -18,14 +18,20 @@ export default class Game extends Phaser.Game {
     // console.log("Before super", props);
     super(config);
     this.sentGame = props.sentGame;
-    this.gameOver = props.gameOver;
-    this.setScene = props.setScene;
     this.appState = props.appState;
+    // console.log("Constructor before add scene", this);
 
-    this.scene.add('Boot', BootScene);
+    this.scene.add('Boot', new BootScene());
     this.scene.start('Boot');
+    // console.log("Constructor after add/start scene:", this);
+  }
 
-      console.log("Successful constructor:", this, props);
+  destroy(bootScene, canvas, noReturn = false) {
+    // console.log("Destroy current game", this);
+
+    // bootScene.destroyGame();
+    // console.log("Destroy current game", this);
+    return super.destroy(canvas, noReturn);
   }
 
   getGame() {
@@ -34,9 +40,6 @@ export default class Game extends Phaser.Game {
 
   setProps(props) {
     this.appState = props.state;
-    // this.scene.resume('Boot');
-
-    // console.log("in setProps:", this, 'and', props);
   }
 };
  

@@ -40,11 +40,11 @@ module.exports = {
     },
     ships: {
       own: [
-        { row: 'a', col: 1, size: 2, sunk: false, horizontal: true },
-        { row: 'b', col: 2, size: 2, sunk: false, horizontal: true },
-        { row: 'c', col: 3, size: 2, sunk: false, horizontal: false },
-        { row: 'e', col: 4, size: 2, sunk: false, horizontal: true },
-        { row: 'f', col: 5, size: 2, sunk: false, horizontal: true }
+        { row: 'a', col: 1, size: 2, sunk: false, horizontal: false },
+        { row: 'a', col: 2, size: 2, sunk: false, horizontal: false },
+        { row: 'a', col: 3, size: 2, sunk: false, horizontal: false },
+        { row: 'a', col: 4, size: 2, sunk: false, horizontal: false },
+        { row: 'a', col: 5, size: 2, sunk: false, horizontal: false }
       ],
       opponent: [
         { row: 'a', col: 4, size: 2, sunk: false, horizontal: true },
@@ -54,6 +54,7 @@ module.exports = {
         { row: 'f', col: 1, size: 2, sunk: false, horizontal: true }
       ]
     },
-    turn: { player: 'player', row: '', col: '' }
+    turn: { player: 'player', shot: { row: '', col: 0, hit: false } },
+    endGame: { gameOver: false, kraken: false, winner: null}
   }
 };

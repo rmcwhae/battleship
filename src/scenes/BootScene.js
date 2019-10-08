@@ -3,12 +3,13 @@ import greenBoatImg from '../assets/green_battleship_sprite.png';
 import waterImg from '../assets/battleship_sprite_water.png';
 import explosionImg from '../assets/explosion.png';
 import explosionImgBlue from '../assets/explosion_blue.png';
+import krakenImg from '../assets/kraken_sprite.png';
 import config from '../config';
 import io from 'socket.io-client';
-import data from '../sample0';
+// import data from '../sample0';
 import { SENT_GAME } from '../hooks/gameReducers';
 
-const sample = data.gameState;
+// const sample = data.gameState;
 const socket = io(config.API_PATH);
 
 const gridDimensions = {
@@ -17,8 +18,25 @@ const gridDimensions = {
 }; // e.g. we have a <gridRows> x <gridRows> square grid where each square has a width and height of <singleSquareLength>
 
 let boats = {};
+let rightTiles = [];
+let playerOneShips = [];
+let playerTwoShips = [];
+let shotsOnPlayerOne = [];
+let shotsOnOpponent = [];
+let playerSpotsOccupied = [];
+let opponentSpotsOccupied = [];
+let krakenSprite;
+let finalBoat1, finalBoat2, finalBoat3;
+const creditsMessage = "Created by Mike Chui and Russell McWhae in October 2019.";
 
-var myTurn = false;
+const emptyBoard = {
+  a: [1, 1, 0, 0, 0, 0],
+  b: [0, 1, 1, 0, 0, 0],
+  c: [0, 0, 1, 0, 0, 0],
+  d: [0, 0, 1, 0, 0, 0],
+  e: [0, 0, 0, 1, 1, 0],
+  f: [0, 0, 0, 0, 1, 1]
+};
 
 const rowNumbers = {
   a: 1,
@@ -38,101 +56,21 @@ const getRowLetterByNumber = function(rowNumber) {
   return getKeyByValue(rowNumbers, rowNumber + 1);
 };
 
-const distributeShips = function(spotsOccupiedObj) {
-  let shipsArray = [];
-
-  while (shipsArray.length < 5) {
-    let ship = {
-      // assign random spot
-      row: Object.keys(rowNumbers)[
-        Math.floor(Math.random() * Object.keys(rowNumbers).length)
-      ],
-      col:
-        rowNumbers[
-          Object.keys(rowNumbers)[
-            Math.floor(Math.random() * Object.keys(rowNumbers).length)
-          ]
-        ],
-      size: 2,
-      sunk: false,
-      horizontal: Math.random() >= 0.5 // true or false
-    };
-    if (ShipLocationIsValid(ship, spotsOccupiedObj)) {
-      // now verify that the proposed location is in fact valid, AND NOT OVERLAPPING EXISTING SHIP!
-      shipsArray.push(ship);
-      occupySpots(ship, spotsOccupiedObj);
-    }
-  }
-  return shipsArray;
-};
-
-const ShipLocationIsValid = function(ship, spotsOccupiedObj) {
-  if (ship.col === 6 && ship.horizontal === true) {
-    return false;
-  }
-  // ship cannot start in 6th row and be vertical
-  if (ship.row === 'f' && ship.horizontal === false) {
-    return false;
-  }
-  if (ship.horizontal) {
-    if (
-      spotsOccupiedObj[ship.row][ship.col - 1] === 1 ||
-      spotsOccupiedObj[ship.row][ship.col] === 1
-    ) {
-      return false; // ship cannot overlap an existing boat
-    }
-  } else {
-    // ship is vertical
-    if (
-      spotsOccupiedObj[ship.row][ship.col - 1] === 1 ||
-      spotsOccupiedObj[nextChar(ship.row)][ship.col - 1] === 1
-    ) {
-      return false; // ship cannot overlap an existing boat
-    }
-  }
-  return true;
-};
-
-const occupySpots = function(ship, spotsOccupiedObj) {
-  if (ship.horizontal) {
-    spotsOccupiedObj[ship.row][ship.col - 1] = 1;
-    spotsOccupiedObj[ship.row][ship.col] = 1;
-  } else {
-    //if ship is vertical
-    spotsOccupiedObj[ship.row][ship.col - 1] = 1;
-    spotsOccupiedObj[nextChar(ship.row)][ship.col - 1] = 1;
-  }
-};
-
 const nextChar = function(c) {
   return String.fromCharCode(c.charCodeAt(0) + 1);
 };
-
-const playerSpotsOccupied = sample.boards.own;
-// const opponentSpotsOccupied = sample.boards.opponent;
-let opponentSpotsOccupied = {
-  a: [0, 0, 0, 0, 0, 0],
-  b: [0, 0, 0, 0, 0, 0],
-  c: [0, 0, 0, 0, 0, 0],
-  d: [0, 0, 0, 0, 0, 0],
-  e: [0, 0, 0, 0, 0, 0],
-  f: [0, 0, 0, 0, 0, 0]
-};
-
-let playerTwoShips = distributeShips(opponentSpotsOccupied);
-
-let shotsOnPlayerOne = sample.shots.opponent;
-let shotsOnOpponent = sample.shots.own;
 
 export default class BootScene extends Phaser.Scene {
   constructor(props) {
     super('Boot');
   }
 
-  // set props(props) {
-  //   this.state = props.state;
-  //   this.setState = props.setState;
-  // }
+  // reset these when new game starts
+  rightTiles = [];
+  shotsOnPlayerOne = emptyBoard;
+  shotsOnOpponent = emptyBoard;
+  playerSpotsOccupied = emptyBoard;
+  opponentSpotsOccupied = emptyBoard;
 
   preload() {
     // this.load.image('splash', splashImg);
@@ -154,31 +92,28 @@ export default class BootScene extends Phaser.Scene {
       frameWidth: 60,
       frameHeight: 60
     });
+    this.load.spritesheet('kraken', krakenImg, {
+      frameWidth: 96,
+      frameHeight: 128
+    });
   }
 
   create() {
+
     const leftTitle = this.add.text(200 - 360 / 2, 0, 'Your Ships', {
       font: '24pt "Inconsolata"',
-      fill: 'green'
+      fill: 'lime'
     });
-    const rightTitle = this.add.text(650 - 360 / 2, 0, 'Opponent', {
+    const rightTitle = this.add.text(650 - 360 / 2, 0, 'Kraken', {
       font: '24pt "Inconsolata"',
-      fill: 'green'
+      fill: 'lime'
     });
 
-    const states = this.add.text(
-      650 - 360 / 2,
-      500,
-      this.game.appState.serverState,
-      {
-        font: '24pt "Inconsolata"',
-        fill: 'green'
-      }
-    );
-    states.setInteractive({ useHandCursor: true });
-    states.on('pointerup', () => {
-      console.log('State ', this.game.appState);
-    });
+    // set these from the server
+    playerSpotsOccupied = this.game.appState.gameState.boards.own;
+    shotsOnPlayerOne = this.game.appState.gameState.shots.own;
+    opponentSpotsOccupied = this.game.appState.gameState.boards.opponent;
+    shotsOnOpponent = this.game.appState.gameState.shots.opponent;
 
     const playerBoard = this.displayGrid(
       50,
@@ -195,10 +130,10 @@ export default class BootScene extends Phaser.Scene {
       true
     );
 
-    console.log('In create():', this.game.appState.gameState);
+    // console.log('In create():', this.game.appState.gameState);
 
-    const playerOneShips = this.game.appState.gameState.ships.own;
-    // let playerTwoShips = this.game.appState.gameState.ships.opponent;
+    playerOneShips = this.game.appState.gameState.ships.own;
+    playerTwoShips = this.game.appState.gameState.ships.opponent;
     this.renderShips('playerBoard', playerOneShips, false, true);
     this.renderShips('opponentBoard', playerTwoShips, true, true);
 
@@ -225,30 +160,19 @@ export default class BootScene extends Phaser.Scene {
     this.anims.create(explodeconfig);
     this.anims.create(explodeconfigBlue);
 
+    this.anims.create({
+      key: 'krakenWalkLeft',
+      frames: this.anims.generateFrameNumbers('kraken', { start: 7, end: 12 }),
+      frameRate: 10,
+      repeat: -1
+    });
+
     this.waitForServer = false;
 
-    console.log('In create:', this.game.appState);
+    // console.log('In create:', this.game.appState);
   }
 
   update() {
-    let hits = 0;
-    for (let i = 0; i < 6; i++) {
-      for (let j = 0; j < 6; j++) {
-        const row = getRowLetterByNumber(j);
-        const col = i;
-        if (
-          shotsOnOpponent[row][col] === 1 &&
-          opponentSpotsOccupied[row][col] === 1
-        )
-          hits++;
-      }
-    }
-    // console.log('hits', hits);
-    if (hits === 10) {
-      console.log('end game');
-      this.scene.pause(); // works
-      this.game.gameOver(); //hook for disconnect sockets and close game
-    }
 
     // if (this.game.appState.serverState === 'RECEIVED' && this.game.appState.board_render && this.count < 100) {
     if (this.waitForServer) {
@@ -266,6 +190,80 @@ export default class BootScene extends Phaser.Scene {
     }
   }
 
+  addKraken = function(startx = 800, starty = 300, endx = -100, endy = 300) {
+    krakenSprite = this.add.sprite(startx, starty, 'kraken', 7);
+    krakenSprite.setDepth(100);
+    krakenSprite.anims.play('krakenWalkLeft');
+    this.tweens.add({
+      targets: krakenSprite,
+      x: endx,
+      duration: 8800,
+      ease: 'Linear'
+    });
+  };
+
+  victoryBoats = function(startx = -100, starty = 300, endx = 950, endy = 300) {
+    finalBoat1 = this.add.sprite(startx - 100, starty + 80, 'greenBoat', 0);
+    finalBoat2 = this.add.sprite(startx, starty, 'greenBoat', 0);
+    finalBoat3 = this.add.sprite(startx - 100, starty - 80, 'greenBoat', 0);
+    finalBoat1.angle = 90;
+    finalBoat1.setDepth(100);
+    finalBoat2.angle = 90;
+    finalBoat2.setDepth(100);
+    finalBoat3.angle = 90;
+    finalBoat3.setDepth(100);
+    this.tweens.add({
+      targets: [finalBoat1, finalBoat2, finalBoat3],
+      x: endx,
+      duration: 6000,
+      ease: 'Linear'
+    });
+  };
+
+  gameOverSequence = function(win) {
+    let winmsg = 'You Lose';
+    if (win) {
+      winmsg = 'You Win';
+    }
+    const endGameMsg = this.add.text(100, 0, winmsg, {
+      font: '120pt "Inconsolata"',
+      fill: 'lime',
+      stroke: '#000000',
+      strokeThickness: 12
+    });
+    endGameMsg.setDepth(100);
+    rightTiles.forEach(tile => tile.removeInteractive()); // disable further clicking on tiles
+    rightTiles = [];
+    const tween = this.tweens.add({
+      // let's make it look pretty
+      targets: endGameMsg,
+      alpha: { from: 0, to: 1 },
+      ease: 'Ease',
+      duration: 1500,
+      repeat: 0, // -1: infinity
+      yoyo: false
+    });
+    if (!win) {
+      this.explodeAll('playerBoard', false);
+      const walkingKraken = this.addKraken();
+    } else {
+      this.explodeAll('opponentBoard', true);
+      const victoryAnimation = this.victoryBoats();
+    }
+    const credits = this.add.text(130, 420, creditsMessage, {
+      font: '16pt "Inconsolata"',
+      fill: 'lime'
+    });
+    const creditsTween = this.tweens.add({
+      // let's make it look pretty
+      targets: credits,
+      alpha: { from: 0, to: 1 },
+      duration: 5000,
+      repeat: 0, // -1: infinity
+      yoyo: false
+    });
+  };
+
   renderShips = function(board, shipsArray, onlySunk, tweenMe) {
     let adjustmentx = 440; // hardcoded to align with opponent board
     let adjustmenty = 50;
@@ -279,12 +277,19 @@ export default class BootScene extends Phaser.Scene {
     }
     // now display them
     shipsArray.forEach((ship, index) => {
+      let frame = 0;
+      if (ship.hit && !ship.sunk) {
+        frame = 1;
+      }
+      if (ship.sunk) {
+        frame = 2;
+      }
       boats[index] = this.add.sprite(
         ship.col * gridDimensions.singleSquareLength + adjustmentx,
         rowNumbers[ship.row] * gridDimensions.singleSquareLength + adjustmenty,
         'greenBoat',
-        ship.sunk ? (frame = 3) : (frame = 0)
-      );
+        (frame = frame)
+      ).setDepth(50);
       if (ship.horizontal) {
         boats[index].angle = 90;
         boats[index].x += gridDimensions.singleSquareLength / 2;
@@ -307,21 +312,42 @@ export default class BootScene extends Phaser.Scene {
     });
   };
 
-  explode = function(board, row, col, blue) {
+  explode = function(board, row, col, blue = false, offsetOverride = false) {
     let adjustmentx = 500;
     let adjustmenty = 20;
     if (board === 'playerBoard') {
       adjustmentx = -10;
     }
+    if (offsetOverride) {
+      adjustmentx = 500 - 60;
+    }
     const xcoord = gridDimensions.singleSquareLength * col + adjustmentx;
     const ycoord =
       gridDimensions.singleSquareLength * rowNumbers[row] + adjustmenty;
     if (!blue) {
-      const boom = this.add.sprite(xcoord, ycoord, 'boom');
+      const boom = this.add.sprite(xcoord, ycoord, 'boom').setDepth(60);
+      boom.angle = Phaser.Math.Between(-90, 90);
       boom.anims.play('explode');
     } else {
-      const boomBlue = this.add.sprite(xcoord, ycoord, 'boomBlue');
+      const boomBlue = this.add.sprite(xcoord, ycoord, 'boomBlue').setDepth(60);
       boomBlue.anims.play('explodeBlue');
+      boomBlue.angle = Phaser.Math.Between(-90, 90);
+    }
+  };
+
+  explodeAll = function(board, offsetOverride = false) {
+    for (let i = 0; i < 3; i++) {
+      setTimeout(() => {
+        Object.keys(rowNumbers).forEach(row => {
+          setTimeout(() => {
+            for (let k = 1; k < 7; k++) {
+              setTimeout(() => {
+                this.explode(board, row, k, false, offsetOverride);
+              }, rowNumbers[row] * 200 + k * 200);
+            }
+          }, rowNumbers[row] * 200);
+        });
+      }, i * 1500);
     }
   };
 
@@ -329,7 +355,7 @@ export default class BootScene extends Phaser.Scene {
     return board[row][col] === 1;
   };
 
-  areShipsSunk = function(spotsOccupiedObj, shotsObj, shipsArray) {
+  areShipsSunk = function(shotsObj, shipsArray) {
     shipsArray.forEach(ship => {
       if (ship.horizontal) {
         if (
@@ -356,10 +382,10 @@ export default class BootScene extends Phaser.Scene {
     shotsObj,
     opponentBoardFlag
   ) {
-    // myTurn = true;
     for (let i = 0; i < 6; i++) {
       for (let k = 0; k < 6; k++) {
         let tile = this.add.sprite(60 * i + xoffset, 60 * k + yoffset, 'water');
+        rightTiles.push(tile);
 
         const row = getRowLetterByNumber(k);
         const col = i;
@@ -372,11 +398,12 @@ export default class BootScene extends Phaser.Scene {
           tile.setFrame(2); // it's a miss!
         } else if (opponentBoardFlag) {
           // && turn?
-          tile.setInteractive(); // let's blow stuff up!
+          tile.setInteractive({
+            useHandCursor: true
+          }); // let's blow stuff up!
         }
 
         if (opponentBoardFlag) {
-          myTurn = true;
           tile.on('pointerover', function(pointer) {
             tile.setFrame(1);
           });
@@ -395,13 +422,14 @@ export default class BootScene extends Phaser.Scene {
               tile.setFrame(3);
               tile.removeInteractive();
               // now check if any boats are sunk
-              this.scene.areShipsSunk(
-                shotsOnOpponent,
-                shotsObj,
-                playerTwoShips
-              );
+              this.scene.areShipsSunk(shotsObj, playerTwoShips);
               // and add these boats to the scene
-              this.scene.renderShips('opponentBoard', playerTwoShips, true, true); // render any sunken ships
+              this.scene.renderShips(
+                'opponentBoard',
+                playerTwoShips,
+                true,
+                true
+              ); // render any sunken ships
             }
             if (spotsOccupiedObj[row][col] === 0) {
               // It's a miss!
@@ -409,7 +437,6 @@ export default class BootScene extends Phaser.Scene {
               tile.setFrame(2);
               tile.removeInteractive();
             }
-            // myTurn = false;
             // this.scene.scene.pause(); // works
             // console.log('clicked', getKeyByValue(rowNumbers, k + 1), i + 1);
             // now send socket message to server…
