@@ -6,10 +6,10 @@ import explosionImgBlue from '../assets/explosion_blue.png';
 import krakenImg from '../assets/kraken_sprite.png';
 import config from '../config';
 import io from 'socket.io-client';
-import data from '../sample0';
+// import data from '../sample0';
 import { SENT_GAME } from '../hooks/gameReducers';
 
-const sample = data.gameState;
+// const sample = data.gameState;
 const socket = io(config.API_PATH);
 
 const gridDimensions = {
