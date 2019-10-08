@@ -238,8 +238,8 @@ export default class BootScene extends Phaser.Scene {
       // let's make it look pretty
       targets: endGameMsg,
       alpha: { from: 0, to: 1 },
-      ease: 'Bounce',
-      duration: 2000,
+      ease: 'Ease',
+      duration: 1500,
       repeat: 0, // -1: infinity
       yoyo: false
     });
