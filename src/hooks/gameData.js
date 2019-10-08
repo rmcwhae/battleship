@@ -109,7 +109,7 @@ export default function useApplicationData() {
   };
 
   function socketReady() {
-    return (socket === undefined ? 'Gmae in Progress' : 'Select a level:');
+    return (socket === undefined ? 'Gmae in progress…' : 'Select difficulty:');
   };
 
   return { state, dispatch, sentGame, gameOver, reset, socketReady, setClean, setLevel
