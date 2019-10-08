@@ -26,6 +26,7 @@ let shotsOnOpponent = [];
 let playerSpotsOccupied = [];
 let opponentSpotsOccupied = [];
 let krakenSprite;
+let finalBoat1, finalBoat2, finalBoat3;
 let cursors; // remove me?
 
 const emptyBoard = {
@@ -202,8 +203,23 @@ export default class BootScene extends Phaser.Scene {
       x: endx,
       duration: 8800,
       ease: 'Linear'
-  });
+    });
   };
+
+  victoryBoat = function(startx = -100, starty = 300, endx = 950, endy = 300) {
+    finalBoat1 = this.add.sprite(startx - 100, starty + 80, 'greenBoat', 0);
+    finalBoat2 = this.add.sprite(startx, starty, 'greenBoat', 0);
+    finalBoat3 = this.add.sprite(startx - 100, starty - 80, 'greenBoat', 0);
+    finalBoat1.angle = 90;
+    finalBoat2.angle = 90;
+    finalBoat3.angle = 90;
+    this.tweens.add({
+      targets: [finalBoat1, finalBoat2, finalBoat3],
+      x: endx,
+      duration: 6000,
+      ease: 'Linear'
+    });
+  }
 
   gameOverSequence = function(win) {
     let winmsg = 'You Lose';
@@ -226,7 +242,11 @@ export default class BootScene extends Phaser.Scene {
       repeat: 0, // -1: infinity
       yoyo: false
     });
-    const monster = this.addKraken();
+    if (!win) {
+      const monster = this.addKraken();
+    } else {
+      const victorySlide = this.victoryBoat();
+    }
   };
 
   renderShips = function(board, shipsArray, onlySunk, tweenMe) {
