@@ -1,10 +1,10 @@
 import * as React from 'react';
 import Game from './Game';
 // import App from './App.jsx';
-let bootScene = undefined;
 
 export default function GameContainer(props) {
   // console.log("Game Container's create Game has", props.state.count, "clicks");
+  let bootScene = undefined;
 
   const [game, setGame] = React.useState();
 
