@@ -5,7 +5,7 @@
   "main": "src/index.js",
   "scripts": {
     "build": "webpack --config webpack/prod.js ",
-    "start": "node server.js",
+    "start": "NODE_ENV=production node server.js",
     "dev": "webpack-dev-server --config webpack/base.js --open",
     "test": "jest"
   },
