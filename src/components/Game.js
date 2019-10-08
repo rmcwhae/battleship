@@ -27,7 +27,7 @@ export default class Game extends Phaser.Game {
   }
 
   destroy(bootScene, canvas, noReturn = false) {
-    // console.log("Destroy current game", this);
+    console.log("Destroy current game", this);
 
     // bootScene.destroyGame();
     console.log("Destroy current game", this);
