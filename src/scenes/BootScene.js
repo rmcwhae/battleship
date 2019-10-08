@@ -131,8 +131,6 @@ export default class BootScene extends Phaser.Scene {
       true
     );
 
-    this.addKraken();
-
     console.log('In create():', this.game.appState.gameState);
 
     playerOneShips = this.game.appState.gameState.ships.own;
@@ -164,7 +162,7 @@ export default class BootScene extends Phaser.Scene {
     this.anims.create(explodeconfigBlue);
 
     this.anims.create({
-      key: 'left',
+      key: 'krakenWalkLeft',
       frames: this.anims.generateFrameNumbers('kraken', { start: 7, end: 12 }),
       frameRate: 10,
       repeat: -1
@@ -176,9 +174,9 @@ export default class BootScene extends Phaser.Scene {
   }
 
   update() {
-    if (cursors.left.isDown) {
-      krakenSprite.anims.play('left', true);
-    }
+    // if (cursors.left.isDown) {
+    //   krakenSprite.anims.play('left', true);
+    // }
 
     // if (this.game.appState.serverState === 'RECEIVED' && this.game.appState.board_render && this.count < 100) {
     if (this.waitForServer) {
@@ -196,8 +194,15 @@ export default class BootScene extends Phaser.Scene {
     }
   }
 
-  addKraken = function(x = 300, y = 100) {
-    krakenSprite = this.add.sprite(x, y, 'kraken', 7);
+  addKraken = function(startx = 800, starty = 300, endx = -100, endy = 300) {
+    krakenSprite = this.add.sprite(startx, starty, 'kraken', 7);
+    krakenSprite.anims.play('krakenWalkLeft');
+    this.tweens.add({
+      targets: krakenSprite,
+      x: endx,
+      duration: 8800,
+      ease: 'Linear'
+  });
   };
 
   gameOverSequence = function(win) {
@@ -207,7 +212,7 @@ export default class BootScene extends Phaser.Scene {
     }
     const endGameMsg = this.add.text(100, 0, winmsg, {
       font: '120pt "Inconsolata"',
-      fill: 'green',
+      fill: 'lime',
       stroke: '#000000',
       strokeThickness: 12
     });
@@ -221,6 +226,7 @@ export default class BootScene extends Phaser.Scene {
       repeat: 0, // -1: infinity
       yoyo: false
     });
+    const monster = this.addKraken();
   };
 
   renderShips = function(board, shipsArray, onlySunk, tweenMe) {
