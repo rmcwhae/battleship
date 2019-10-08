@@ -206,7 +206,7 @@ export default class BootScene extends Phaser.Scene {
     });
   };
 
-  victoryBoat = function(startx = -100, starty = 300, endx = 950, endy = 300) {
+  victoryBoats = function(startx = -100, starty = 300, endx = 950, endy = 300) {
     finalBoat1 = this.add.sprite(startx - 100, starty + 80, 'greenBoat', 0);
     finalBoat2 = this.add.sprite(startx, starty, 'greenBoat', 0);
     finalBoat3 = this.add.sprite(startx - 100, starty - 80, 'greenBoat', 0);
@@ -243,9 +243,9 @@ export default class BootScene extends Phaser.Scene {
       yoyo: false
     });
     if (!win) {
-      const monster = this.addKraken();
+      const walkingKraken = this.addKraken();
     } else {
-      const victorySlide = this.victoryBoat();
+      const victoryAnimation = this.victoryBoats();
     }
   };
 
