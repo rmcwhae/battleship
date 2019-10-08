@@ -250,7 +250,7 @@ export default class BootScene extends Phaser.Scene {
       this.explodeAll('opponentBoard', true);
       const victoryAnimation = this.victoryBoats();
     }
-    const credits = this.add.text(135, 420, creditsMessage, {
+    const credits = this.add.text(130, 420, creditsMessage, {
       font: '16pt "Inconsolata"',
       fill: 'lime'
     });
