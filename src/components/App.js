@@ -71,15 +71,21 @@ export default function App() {
     <React.Fragment>
       <div style={{ textAlign: 'center' }}>
         {state.containerState === 'LEVEL' && <Title>Received</Title>}
-        <Title>Welcome to Pirate Battleship!</Title>
-        <img src={introImg} style={{ height: '200px' }}></img>
-        {state.containerState === LOADING && <IntroPara>
-          In this take on the classic Battleship game, you will square off
-          against the Kraken. You both start with five ships randomly
-          distributed across a 6x6 grid. You will take turns firing shots at each
-          other, with each boat requiring two hits to sink. The first to sink all five
-          of the other’s ships wins.
-        </IntroPara>}
+        {state.containerState === LOADING && (
+          <Title>Welcome to Pirate Battleship!</Title>
+        )}
+        {state.containerState === LOADING && (
+          <img src={introImg} style={{ height: '148px' }}></img>
+        )}
+        {state.containerState === LOADING && (
+          <IntroPara>
+            In this take on the classic Battleship game, you will square off
+            against the Kraken. You both start with five ships randomly
+            distributed across a 6x6 grid. You will take turns firing shots at
+            each other, with each boat requiring two hits to sink. The first to
+            sink all five of the other’s ships wins.
+          </IntroPara>
+        )}
         {state.containerState === LOADING && <Title>{socketReady()}</Title>}
         {state.containerState === LOADING && (
           <TitleClickable onClick={() => setLevel(EASY)}>
@@ -97,10 +103,10 @@ export default function App() {
           </TitleClickable>
         )}
         {state.containerState === IN_PROGRESS && (
-          <Title>
-            Sink the Kraken’s ships. Playing on difficulty level:{' '}
-            {state.level}
-          </Title>
+          <Title>Sink the Kraken’s ships.</Title>
+        )}
+        {state.containerState === IN_PROGRESS && (
+          <Title>Playing on difficulty level: {state.level}</Title>
         )}
         {state.containerState === GAME_OVER && (
           <TitleClickable onClick={() => reset()}>
