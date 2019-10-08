@@ -325,11 +325,11 @@ export default class BootScene extends Phaser.Scene {
     const ycoord =
       gridDimensions.singleSquareLength * rowNumbers[row] + adjustmenty;
     if (!blue) {
-      const boom = this.add.sprite(xcoord, ycoord, 'boom');
+      const boom = this.add.sprite(xcoord, ycoord, 'boom').setDepth(60);
       boom.angle = Phaser.Math.Between(-90, 90);
       boom.anims.play('explode');
     } else {
-      const boomBlue = this.add.sprite(xcoord, ycoord, 'boomBlue');
+      const boomBlue = this.add.sprite(xcoord, ycoord, 'boomBlue').setDepth(60);
       boomBlue.anims.play('explodeBlue');
       boomBlue.angle = Phaser.Math.Between(-90, 90);
     }
@@ -429,7 +429,7 @@ export default class BootScene extends Phaser.Scene {
                 playerTwoShips,
                 true,
                 true
-              ); // render any sunken ships
+              ).setDepth(50); // render any sunken ships
             }
             if (spotsOccupiedObj[row][col] === 0) {
               // It's a miss!
