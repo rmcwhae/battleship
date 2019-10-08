@@ -289,7 +289,7 @@ export default class BootScene extends Phaser.Scene {
         rowNumbers[ship.row] * gridDimensions.singleSquareLength + adjustmenty,
         'greenBoat',
         (frame = frame)
-      );
+      ).setDepth(50);
       if (ship.horizontal) {
         boats[index].angle = 90;
         boats[index].x += gridDimensions.singleSquareLength / 2;
@@ -429,7 +429,7 @@ export default class BootScene extends Phaser.Scene {
                 playerTwoShips,
                 true,
                 true
-              ).setDepth(50); // render any sunken ships
+              ); // render any sunken ships
             }
             if (spotsOccupiedObj[row][col] === 0) {
               // It's a miss!
