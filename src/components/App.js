@@ -78,8 +78,7 @@ export default function App() {
           against the Kraken. You both start with five ships randomly
           distributed across a 6x6 grid. You will take turns firing shots at each
           other, with each boat requiring two hits to sink. The first to sink all five
-          of the other’s ships wins. Be careful not to anger the Kraken with
-          careless bombardment, however…
+          of the other’s ships wins.
         </IntroPara>
         {state.containerState === LOADING && <Title>{socketReady()}</Title>}
         {state.containerState === LOADING && (
