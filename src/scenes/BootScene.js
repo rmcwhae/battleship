@@ -197,6 +197,7 @@ export default class BootScene extends Phaser.Scene {
 
   addKraken = function(startx = 800, starty = 300, endx = -100, endy = 300) {
     krakenSprite = this.add.sprite(startx, starty, 'kraken', 7);
+    krakenSprite.setDepth(100);
     krakenSprite.anims.play('krakenWalkLeft');
     this.tweens.add({
       targets: krakenSprite,
@@ -211,15 +212,18 @@ export default class BootScene extends Phaser.Scene {
     finalBoat2 = this.add.sprite(startx, starty, 'greenBoat', 0);
     finalBoat3 = this.add.sprite(startx - 100, starty - 80, 'greenBoat', 0);
     finalBoat1.angle = 90;
+    finalBoat1.setDepth(100);
     finalBoat2.angle = 90;
+    finalBoat2.setDepth(100);
     finalBoat3.angle = 90;
+    finalBoat3.setDepth(100);
     this.tweens.add({
       targets: [finalBoat1, finalBoat2, finalBoat3],
       x: endx,
       duration: 6000,
       ease: 'Linear'
     });
-  }
+  };
 
   gameOverSequence = function(win) {
     let winmsg = 'You Lose';
@@ -232,6 +236,7 @@ export default class BootScene extends Phaser.Scene {
       stroke: '#000000',
       strokeThickness: 12
     });
+    endGameMsg.setDepth(100);
     rightTiles.forEach(tile => tile.removeInteractive()); // disable further clicking on tiles
     rightTiles = [];
     const tween = this.tweens.add({
@@ -243,8 +248,10 @@ export default class BootScene extends Phaser.Scene {
       yoyo: false
     });
     if (!win) {
+      this.explodeAll('playerBoard', false);
       const walkingKraken = this.addKraken();
     } else {
+      this.explodeAll('opponentBoard', true);
       const victoryAnimation = this.victoryBoats();
     }
   };
@@ -297,11 +304,14 @@ export default class BootScene extends Phaser.Scene {
     });
   };
 
-  explode = function(board, row, col, blue) {
+  explode = function(board, row, col, blue = false, offsetOverride = false) {
     let adjustmentx = 500;
     let adjustmenty = 20;
     if (board === 'playerBoard') {
       adjustmentx = -10;
+    }
+    if (offsetOverride) {
+      adjustmentx = 500 - 60;
     }
     const xcoord = gridDimensions.singleSquareLength * col + adjustmentx;
     const ycoord =
@@ -312,6 +322,22 @@ export default class BootScene extends Phaser.Scene {
     } else {
       const boomBlue = this.add.sprite(xcoord, ycoord, 'boomBlue');
       boomBlue.anims.play('explodeBlue');
+    }
+  };
+
+  explodeAll = function(board, offsetOverride = false) {
+    for (let i = 0; i < 3; i++) {
+      setTimeout(() => {
+        Object.keys(rowNumbers).forEach(row => {
+          setTimeout(() => {
+            for (let k = 1; k < 7; k++) {
+              setTimeout(() => {
+                this.explode(board, row, k, false, offsetOverride);
+              }, rowNumbers[row] * 200 + k * 200);
+            }
+          }, rowNumbers[row] * 200);
+        });
+      }, i * 1500);
     }
   };
 
