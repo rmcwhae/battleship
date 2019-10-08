@@ -106,7 +106,7 @@ export default class BootScene extends Phaser.Scene {
       font: '24pt "Inconsolata"',
       fill: 'lime'
     });
-    const rightTitle = this.add.text(650 - 360 / 2, 0, 'Opponent', {
+    const rightTitle = this.add.text(650 - 360 / 2, 0, 'Kraken', {
       font: '24pt "Inconsolata"',
       fill: 'lime'
     });

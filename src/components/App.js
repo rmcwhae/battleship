@@ -73,13 +73,13 @@ export default function App() {
         {state.containerState === 'LEVEL' && <Title>Received</Title>}
         <Title>Welcome to Pirate Battleship!</Title>
         <img src={introImg} style={{ height: '200px' }}></img>
-        <IntroPara>
+        {state.containerState === LOADING && <IntroPara>
           In this take on the classic Battleship game, you will square off
           against the Kraken. You both start with five ships randomly
           distributed across a 6x6 grid. You will take turns firing shots at each
           other, with each boat requiring two hits to sink. The first to sink all five
           of the other’s ships wins.
-        </IntroPara>
+        </IntroPara>}
         {state.containerState === LOADING && <Title>{socketReady()}</Title>}
         {state.containerState === LOADING && (
           <TitleClickable onClick={() => setLevel(EASY)}>
@@ -98,7 +98,7 @@ export default function App() {
         )}
         {state.containerState === IN_PROGRESS && (
           <Title>
-            Sink your opponent’s ships. Playing on difficulty level:{' '}
+            Sink the Kraken’s ships. Playing on difficulty level:{' '}
             {state.level}
           </Title>
         )}
