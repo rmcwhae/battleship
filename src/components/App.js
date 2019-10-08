@@ -85,7 +85,7 @@ export default function App() {
         )}
         {state.containerState === GAME_OVER && (
           <TitleClickable onClick={() => reset()}>
-            Restart Battleship
+            👉 Restart Battleship
           </TitleClickable>
         )}
       </div>
