@@ -7,22 +7,28 @@ import config from '../config';
 import styled from 'styled-components'
 import useApplicationData from '../hooks/gameData'
 
+const IN_PROGRESS = 'IN_PROGRESS';
+const LEVEL = 'LEVEL';
+const GAME_OVER = 'GAME_OVER';
+const EASY = 'EASY';
+const INTERMEDIATE = 'INTERMEDIATE';
+const DIFFICULT = 'DIFFICULT';
+const LOADING = 'LOADING';
+
 export default function App() {
 
   const {
-    state,
-    dispatch,
-    add,
-    minus,
-    setScene,
-    gameOver,
-    reset,
-    socketID,
-    sentGame,
-    setContainer
+    state, 
+    dispatch, 
+    sentGame, 
+    gameOver, 
+    reset, 
+    socketReady,
+    setClean,
+    setLevel
   } = useApplicationData();
 
-  console.log("App.js before render - state:", state, ", container:", state.containerState);
+  // console.log("App.js before render - state:", state, ", container:", state.containerState);
 
   const Title = styled.h2`
     font-family: 'Inconsolata', monospace;
@@ -36,15 +42,20 @@ export default function App() {
   return (
     <React.Fragment>
       <div style={{ textAlign: 'center' }}>
-        <Title>Welcome to Battleship at {socketID()}</Title>
-        <Title>{state.count}</Title>
-        {state.containerState === 'LEVEL' && <Title>Received</Title>}
-        <button onClick={() => minus()}>Toggle Static Board</button>
-        {state.containerState === 'GAME_OVER' && 
+        <Title>☠Welcome to Battleship☠</Title>
+        {state.containerState === LOADING && 
+          <Title>{socketReady()}</Title>}
+        {state.containerState === LOADING && 
+          <Title onClick={() => setLevel(EASY)}>Easy</Title>}
+        {state.containerState === LOADING && 
+          <Title onClick={() => setLevel(INTERMEDIATE)}>Intermediate</Title>}
+          {state.containerState === LOADING && 
+          <Title onClick={() => setLevel(DIFFICULT)}>Difficult</Title>}
+        {state.containerState === IN_PROGRESS && <Title>Game in progress</Title>}
+        {state.containerState === GAME_OVER && 
           <Title onClick={() => reset()}>Restart Battleship</Title>}
-        <button onClick={() => add()}>Difficult</button>
       </div>
-      {state.containerState !== 'LEVEL' && <GameContainer state={state} sentGame={sentGame} setScene={setScene} gameOver={gameOver} />}
+      {state.containerState === IN_PROGRESS && <GameContainer state={state} sentGame={sentGame} gameOver={gameOver} setClean={setClean} />}
     </React.Fragment>
   );
 }
