@@ -454,9 +454,6 @@ export default class BootScene extends Phaser.Scene {
               tile.setFrame(2);
               tile.removeInteractive();
             }
-            // this.scene.scene.pause(); // works
-            // console.log('clicked', getKeyByValue(rowNumbers, k + 1), i + 1);
-            // now send socket message to server…
           });
         }
       }
