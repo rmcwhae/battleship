@@ -27,7 +27,11 @@ let playerSpotsOccupied = [];
 let opponentSpotsOccupied = [];
 let krakenSprite;
 let finalBoat1, finalBoat2, finalBoat3;
-const creditsMessage = "Created by Mike Chui and Russell McWhae in October 2019.";
+let boom, boomBlue;
+let megaBoom = undefined;
+let megaBoomArray = [];
+const creditsMessage =
+  'Created by Mike Chui and Russell McWhae in October 2019.';
 
 const emptyBoard = {
   a: [1, 1, 0, 0, 0, 0],
@@ -71,6 +75,8 @@ export default class BootScene extends Phaser.Scene {
   shotsOnOpponent = emptyBoard;
   playerSpotsOccupied = emptyBoard;
   opponentSpotsOccupied = emptyBoard;
+  megaBoom = undefined;
+  megaBoom = [];
 
   preload() {
     // this.load.image('splash', splashImg);
@@ -99,7 +105,6 @@ export default class BootScene extends Phaser.Scene {
   }
 
   create() {
-
     const leftTitle = this.add.text(200 - 360 / 2, 0, 'Your Ships', {
       font: '24pt "Inconsolata"',
       fill: 'lime'
@@ -173,7 +178,6 @@ export default class BootScene extends Phaser.Scene {
   }
 
   update() {
-
     // if (this.game.appState.serverState === 'RECEIVED' && this.game.appState.board_render && this.count < 100) {
     if (this.waitForServer) {
       console.log(
@@ -244,11 +248,11 @@ export default class BootScene extends Phaser.Scene {
       yoyo: false
     });
     if (!win) {
-      this.explodeAll('playerBoard', false);
+      megaBoom = this.explodeAll('playerBoard', false);
       const walkingKraken = this.addKraken();
     } else {
-      this.explodeAll('opponentBoard', true);
-      const victoryAnimation = this.victoryBoats();
+      megaBoom = this.explodeAll('opponentBoard', true);
+      // const victoryAnimation = this.victoryBoats();
     }
     const credits = this.add.text(130, 420, creditsMessage, {
       font: '16pt "Inconsolata"',
@@ -284,12 +288,15 @@ export default class BootScene extends Phaser.Scene {
       if (ship.sunk) {
         frame = 2;
       }
-      boats[index] = this.add.sprite(
-        ship.col * gridDimensions.singleSquareLength + adjustmentx,
-        rowNumbers[ship.row] * gridDimensions.singleSquareLength + adjustmenty,
-        'greenBoat',
-        (frame = frame)
-      ).setDepth(50);
+      boats[index] = this.add
+        .sprite(
+          ship.col * gridDimensions.singleSquareLength + adjustmentx,
+          rowNumbers[ship.row] * gridDimensions.singleSquareLength +
+            adjustmenty,
+          'greenBoat',
+          (frame = frame)
+        )
+        .setDepth(50);
       if (ship.horizontal) {
         boats[index].angle = 90;
         boats[index].x += gridDimensions.singleSquareLength / 2;
@@ -325,11 +332,11 @@ export default class BootScene extends Phaser.Scene {
     const ycoord =
       gridDimensions.singleSquareLength * rowNumbers[row] + adjustmenty;
     if (!blue) {
-      const boom = this.add.sprite(xcoord, ycoord, 'boom').setDepth(60);
+      boom = this.add.sprite(xcoord, ycoord, 'boom').setDepth(60);
       boom.angle = Phaser.Math.Between(-90, 90);
       boom.anims.play('explode');
     } else {
-      const boomBlue = this.add.sprite(xcoord, ycoord, 'boomBlue').setDepth(60);
+      boomBlue = this.add.sprite(xcoord, ycoord, 'boomBlue').setDepth(60);
       boomBlue.anims.play('explodeBlue');
       boomBlue.angle = Phaser.Math.Between(-90, 90);
     }
@@ -337,17 +344,13 @@ export default class BootScene extends Phaser.Scene {
 
   explodeAll = function(board, offsetOverride = false) {
     for (let i = 0; i < 3; i++) {
-      setTimeout(() => {
-        Object.keys(rowNumbers).forEach(row => {
-          setTimeout(() => {
-            for (let k = 1; k < 7; k++) {
-              setTimeout(() => {
-                this.explode(board, row, k, false, offsetOverride);
-              }, rowNumbers[row] * 200 + k * 200);
-            }
-          }, rowNumbers[row] * 200);
-        });
-      }, i * 1500);
+      Object.keys(rowNumbers).forEach(row => {
+        for (let k = 1; k < 7; k++) {
+          megaBoomArray.push(
+            this.explode(board, row, k, false, offsetOverride)
+          );
+        }
+      });
     }
   };
 
