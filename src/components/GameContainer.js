@@ -53,7 +53,7 @@ export default function GameContainer(props) {
           );
         props.gameOver();
         // game.destroy(bootScene, true);
-        props.setClean({game, bootScene });
+        props.setClean({ game, bootScene });
       } // check if game is over then change state to render reset
     }      
   }, [props.state.gameState, props.state.level]);
