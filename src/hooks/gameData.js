@@ -47,10 +47,10 @@ export default function useApplicationData() {
           // console.log('Game level is ', state.level);
         };
         socket.on('connect', () => {
-          // console.log('Connect ', socket.id);
+          console.log('Connect ', socket.id);
 
           if (state.clean !== undefined) {
-                    // game.destroy(bootScene, true);
+            // game.destroy(bootScene, true);
             state.clean.game.destroy(state.clean.bootScene, true);
             dispatch({ type: CONTAINER, clean: undefined });
           }
@@ -62,7 +62,7 @@ export default function useApplicationData() {
             if (socket.id === serverId) {
               dispatch({ type: RECEIVED_GAME, serverState: RECEIVED, containerState: IN_PROGRESS, gameState });
 
-              // console.log("confirmed player after reducer:", gameState, clientId, serverId, rest, " is now", state);
+              console.log("confirmed player after reducer:", gameState, clientId, serverId, rest, " is now", state);
             }
           });
         });
