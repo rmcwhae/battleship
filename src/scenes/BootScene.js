@@ -357,8 +357,7 @@ export default class BootScene extends Phaser.Scene {
         for (let k = 1; k < 7; k++) {
           this.time.addEvent({
             delay:
-              // i * 2000 + (rowNumbers[row] + k) * 200 + k * 200,
-              i * 2000 + (rowNumbers[row] + k) * 200,
+              i * 2000 + (rowNumbers[row] + k) * 200 - 200,
             callback: () => {
               this.explode(board, row, k, false, offsetOverride);
             },
@@ -455,9 +454,6 @@ export default class BootScene extends Phaser.Scene {
               tile.setFrame(2);
               tile.removeInteractive();
             }
-            // this.scene.scene.pause(); // works
-            // console.log('clicked', getKeyByValue(rowNumbers, k + 1), i + 1);
-            // now send socket message to server…
           });
         }
       }
