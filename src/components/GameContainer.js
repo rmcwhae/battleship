@@ -1,6 +1,7 @@
 import * as React from 'react';
 import Game from './Game';
 // import App from './App.jsx';
+let visibleBoats;
 
 export default function GameContainer(props) {
   // console.log("Game Container's create Game has", props.state.count, "clicks");
@@ -20,6 +21,7 @@ export default function GameContainer(props) {
 
   React.useEffect(() => {
     // console.log("in container", props.state);
+    visibleBoats = null;
 
     game && game.setProps(props);
     if (bootScene) {
@@ -32,7 +34,7 @@ export default function GameContainer(props) {
         props.state.gameState.shots.own,
         false
       );
-      bootScene.renderShips(
+      visibleBoats = bootScene.renderShips(
         'playerBoard',
         props.state.gameState.ships.own,
         false,

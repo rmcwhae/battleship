@@ -357,8 +357,7 @@ export default class BootScene extends Phaser.Scene {
         for (let k = 1; k < 7; k++) {
           this.time.addEvent({
             delay:
-              // i * 2000 + (rowNumbers[row] + k) * 200 + k * 200,
-              i * 2000 + (rowNumbers[row] + k) * 200,
+              i * 2000 + (rowNumbers[row] + k) * 200 - 200,
             callback: () => {
               this.explode(board, row, k, false, offsetOverride);
             },
