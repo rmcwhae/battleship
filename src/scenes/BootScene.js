@@ -137,7 +137,7 @@ export default class BootScene extends Phaser.Scene {
       true
     );
 
-    // console.log('In create():', this.game.appState.gameState);
+    console.log('In create():', playerOneShips);
 
     playerOneShips = this.game.appState.gameState.ships.own;
     playerTwoShips = this.game.appState.gameState.ships.opponent;
