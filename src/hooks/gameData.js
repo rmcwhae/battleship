@@ -26,11 +26,28 @@ export default function useApplicationData() {
       turn: {},
       clean: undefined
     });
+    
+    useEffect(() => {
+        // if (state.serverState === '' || socket.connected) {
+        //   socket.disconnect();
+        //   socket.connect();
+        //   // console.log('Game level is ', state.level);
+        // };
+      socket.on('connect', () => {
+        console.log('Connect ', socket.id);
+        dispatch({ type: SERVER, serverState: CONNECTED });
+
+        socket.on('error', (error) => {
+          dispatch({ type: SERVER, serverState: 'ERROR'});
+          socket.emit('disconnect');
+          alert('Server socket disconnected');
+        });
+      });
+    }, []);
 
     useEffect(() => {
       if (state.reset) {
         // console.log("Reset?", state.reset, "level:", state.level, " for ", state);
-
         dispatch({ type: RESET, 
           gameState: sample0.gameState,
           serverState: '',
@@ -40,37 +57,20 @@ export default function useApplicationData() {
       }
       // console.log("Reset?", state.reset, "level:", state.level, " for ", state);
 
+      if (state.clean !== undefined) {
+        // game.destroy(bootScene, true);
+        state.clean.game.destroy(state.clean.bootScene, true);
+        dispatch({ type: CONTAINER, clean: undefined });
+      }
+
       if (state.level) {
-        if (state.serverState === '' || socket.connected) {
-          socket.disconnect();
-          socket.connect();
-          // console.log('Game level is ', state.level);
-        };
-        socket.on('connect', () => {
-          console.log('Connect ', socket.id);
+        // Create a confirmation to server this is a player
+        socket.emit('player', socket.id, state.level, function ({ gameState, clientId, serverId, ...rest }) {
+          if (socket.id === serverId) {
+            dispatch({ type: RECEIVED_GAME, serverState: RECEIVED, containerState: IN_PROGRESS, gameState });
 
-          if (state.clean !== undefined) {
-            // game.destroy(bootScene, true);
-            state.clean.game.destroy(state.clean.bootScene, true);
-            dispatch({ type: CONTAINER, clean: undefined });
+            console.log("confirmed player after reducer:", gameState, clientId, serverId, rest, " is now", state);
           }
-
-          dispatch({ type: SERVER, serverState: CONNECTED, containerState: LEVEL, reset: false });
-
-          // Create a confirmation to server this is a player
-          socket.emit('player', socket.id, state.level, function ({ gameState, clientId, serverId, ...rest }) {
-            if (socket.id === serverId) {
-              dispatch({ type: RECEIVED_GAME, serverState: RECEIVED, containerState: IN_PROGRESS, gameState });
-
-              console.log("confirmed player after reducer:", gameState, clientId, serverId, rest, " is now", state);
-            }
-          });
-        });
-
-        socket.on('error', (error) => {
-          dispatch({ type: SERVER, serverState: 'ERROR'});
-          socket.emit('disconnect');
-          alert('Server socket disconnected');
         });
       }
     }, [state.level]);
