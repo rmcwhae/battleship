@@ -29,6 +29,7 @@ let krakenSprite;
 let finalBoat1, finalBoat2, finalBoat3;
 let boom, boomBlue;
 let eKey;
+let qKey;
 const creditsMessage =
   'Created by Mike Chui and Russell McWhae in October 2019.';
 
@@ -104,6 +105,7 @@ export default class BootScene extends Phaser.Scene {
   create() {
     //  Input Events
     eKey = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.E);
+    qKey = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.Q);
 
     const leftTitle = this.add.text(200 - 360 / 2, 0, 'Your Ships', {
       font: '24pt "Inconsolata"',
@@ -179,8 +181,11 @@ export default class BootScene extends Phaser.Scene {
 
   update() {
 
+    if (Phaser.Input.Keyboard.JustDown(qKey)) {
+      this.explodeAll('playerBoard', false);
+    }
     if (Phaser.Input.Keyboard.JustDown(eKey)) {
-      this.explodeAll('opponentBoard', true); // press E to blow things up!
+      this.explodeAll('opponentBoard', true);
     }
     // if (this.game.appState.serverState === 'RECEIVED' && this.game.appState.board_render && this.count < 100) {
     if (this.waitForServer) {
