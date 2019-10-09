@@ -28,8 +28,7 @@ let opponentSpotsOccupied = [];
 let krakenSprite;
 let finalBoat1, finalBoat2, finalBoat3;
 let boom, boomBlue;
-let megaBoom = undefined;
-let megaBoomArray = [];
+let eKey;
 const creditsMessage =
   'Created by Mike Chui and Russell McWhae in October 2019.';
 
@@ -75,8 +74,6 @@ export default class BootScene extends Phaser.Scene {
   shotsOnOpponent = emptyBoard;
   playerSpotsOccupied = emptyBoard;
   opponentSpotsOccupied = emptyBoard;
-  megaBoom = undefined;
-  megaBoom = [];
 
   preload() {
     // this.load.image('splash', splashImg);
@@ -105,6 +102,9 @@ export default class BootScene extends Phaser.Scene {
   }
 
   create() {
+    //  Input Events
+    eKey = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.E);
+
     const leftTitle = this.add.text(200 - 360 / 2, 0, 'Your Ships', {
       font: '24pt "Inconsolata"',
       fill: 'lime'
@@ -178,6 +178,10 @@ export default class BootScene extends Phaser.Scene {
   }
 
   update() {
+
+    if (Phaser.Input.Keyboard.JustDown(eKey)) {
+      this.explodeAll('opponentBoard', true); // press E to blow things up!
+    }
     // if (this.game.appState.serverState === 'RECEIVED' && this.game.appState.board_render && this.count < 100) {
     if (this.waitForServer) {
       console.log(
@@ -248,11 +252,11 @@ export default class BootScene extends Phaser.Scene {
       yoyo: false
     });
     if (!win) {
-      megaBoom = this.explodeAll('playerBoard', false);
+      this.explodeAll('playerBoard', false);
       const walkingKraken = this.addKraken();
     } else {
-      megaBoom = this.explodeAll('opponentBoard', true);
-      // const victoryAnimation = this.victoryBoats();
+      this.explodeAll('opponentBoard', true);
+      const victoryAnimation = this.victoryBoats();
     }
     const credits = this.add.text(130, 420, creditsMessage, {
       font: '16pt "Inconsolata"',
@@ -346,9 +350,15 @@ export default class BootScene extends Phaser.Scene {
     for (let i = 0; i < 3; i++) {
       Object.keys(rowNumbers).forEach(row => {
         for (let k = 1; k < 7; k++) {
-          megaBoomArray.push(
-            this.explode(board, row, k, false, offsetOverride)
-          );
+          this.time.addEvent({
+            delay:
+              // i * 2000 + (rowNumbers[row] + k) * 200 + k * 200,
+              i * 2000 + (rowNumbers[row] + k) * 200,
+            callback: () => {
+              this.explode(board, row, k, false, offsetOverride);
+            },
+            loop: false
+          });
         }
       });
     }
