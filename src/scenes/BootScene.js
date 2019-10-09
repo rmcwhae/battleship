@@ -275,6 +275,15 @@ export default class BootScene extends Phaser.Scene {
       repeat: 0, // -1: infinity
       yoyo: false
     });
+    //reset all global variables to null
+    boats = {};
+    rightTiles = [];
+    playerOneShips = [];
+    playerTwoShips = [];
+    shotsOnPlayerOne = [];
+    shotsOnOpponent = [];
+    playerSpotsOccupied = [];
+    opponentSpotsOccupied = [];
   };
 
   renderShips = function(board, shipsArray, onlySunk, tweenMe) {
