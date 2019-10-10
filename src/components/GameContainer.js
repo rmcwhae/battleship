@@ -26,7 +26,7 @@ export default function GameContainer(props) {
     game && game.setProps(props);
     if (bootScene) {
       // console.log('Checking scene in Container:', props);
-      console.log('Game is now ->', game, " with state", props.state.gameState);
+      // console.log('Game is now ->', game, " with state", props.state.gameState);
       bootScene.displayGrid(
         50,
         80,
