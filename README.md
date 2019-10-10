@@ -97,8 +97,8 @@ As this is a student project there is currently no process for submitting pull r
 
 ## Authors
 
-* [**Russell McWhae**](https://github.com/rmcwhae) - *Initial work*
-* [**Michael Chui**](https://github.com/mikel-k-khui) - *Initial work*
+* [**Russell McWhae**](https://github.com/rmcwhae)
+* [**Michael Chui**](https://github.com/mikel-k-khui)
 
 ## License
 
