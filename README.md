@@ -1,55 +1,91 @@
-# Phaser 3 Webpack Project Template
+# Pirate Battleship!
 
-A Phaser 3 project template with ES6 support via [Babel 7](https://babeljs.io/) and [Webpack 4](https://webpack.js.org/)
-that includes hot-reloading for development and production-ready builds.
+[*—You sank my pirate ship.*](https://www.youtube.com/watch?v=GkwMDkfrZ1M)
 
-Loading images via JavaScript module `import` is also supported.
+## Final Product
 
-## Requirements
+Key features:
+1) Play against the Kraken in this single-player Battleship clone
+2) Three different difficulty levels, set according to a basic probabilistic hit algorithm.
+3) Phaser 3/React front-end with socket-connected API server for Kraken shot logic.
 
-[Node.js](https://nodejs.org) is required to install dependencies and run scripts via `npm`.
+### Mobile View
 
-## Available Commands
+#### New Game
+!["New Game Mobile"](./docs/battleship_mobile.png)
 
-| Command | Description |
-|---------|-------------|
-| `npm install` | Install project dependencies |
-| `npm start` | Build project and open web server running project |
-| `npm run build` | Builds code bundle with production settings (minification, uglification, etc..) |
+#### Playing a Game
+!["Game in progress"](./docs/battleship_mobile_gaming.png)
 
-## Writing Code
+### Desktop View
 
-After cloning the repo, run `npm install` from your project directory. Then, you can start the local development
-server by running `npm start`.
+#### New Game
+!["New Game"](./docs/battleship_newgame.png)
+
+#### Game Board
+!["Game Board"](./docs/battleship_gameboard.png)
+
+#### Playing a Game
+!["Playing a game"](./docs/battleship_game-in-progress.png)
+
+#### Victory
+!["Victory"](./docs/battleship_victory.png)
 
 
-After starting the development server with `npm start`, you can edit any files in the `src` folder
-and webpack will automatically recompile and reload your server (available at `http://localhost:8080`
-by default).
+## Project Setup
 
-## Customizing Template
+### Dependencies
 
-### Babel
-You can write modern ES6+ JavaScript and Babel will transpile it to a version of JavaScript that you
-want your project to support. The targeted browsers are set in the `.babelrc` file and the default currently
-targets all browsers with total usage over "0.25%" but excludes IE11 and Opera Mini.
+- node
+- express
+- nodemon *devDependencies*
+- Phaser 3
+- React
 
-  ```
-  "browsers": [
-    ">0.25%",
-    "not ie 11",
-    "not op_mini all"
-  ]
-  ```
+### Installation
 
-### Webpack
-If you want to customize your build, such as adding a new webpack loader or plugin (i.e. for loading CSS or fonts), you can
-modify the `webpack/base.js` file for cross-project changes, or you can modify and/or create
-new configuration files and target them in specific npm tasks inside of `package.json'.
+1. Clone this repo (the “client” repo).
 
-## Deploying Code
-After you run the `npm run build` command, your code will be built into a single bundle located at 
-`dist/bundle.min.js` along with any other assets you project depended. 
+2. Clone the [battleship-server](https://github.com/mikel-k-khui/battleship-server) repo (the “server” repo).
 
-If you put the contents of the `dist` folder in a publicly-accessible location (say something like `http://mycoolserver.com`), 
-you should be able to open `http://mycoolserver.com/index.html` and play your game.
+3. Install node dependencies in **both** the server and client directories: `npm install`
+
+4. Start the server using `npm run watch`. The server console should say `Listening on port 8001 in development mode.`
+*Note: nodemon is used, so you should not have to restart this server*
+
+5. Start the client: `npm run watch`. The default port is 8080.
+
+6. Open a new browser window and enter the local host with your port.
+```
+http://localhost:8080/
+```
+
+7. Have fun blowing ships up! Press Q or E to see fiery explosions.
+
+## Testing
+
+* Manual console.logs
+* React Developer Tools for Google Chrome
+
+## Contributing
+
+As this is a student project there is currently no process for submitting pull requests.
+
+## Versioning
+
+* [SemVer](http://semver.org/) for versioning: version 1.0.0.
+
+## Authors
+
+* [**Russell McWhae**](https://github.com/rmcwhae) - *Initial work*
+* [**Michael Chui**](https://github.com/mikel-k-khui) - *Initial work*
+
+## License
+
+This project is licensed under the MIT License - see the [LICENSE.md](LICENSE.md) file for details
+
+## Credits
+
+* Pirate Ships assets from https://www.kenney.nl/assets/pirate-pack
+* Kraken from https://opengameart.org/content/kraken
+* Phaser 3 and React project boilerplate from https://github.com/photonstorm/phaser3-project-template
