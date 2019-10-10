@@ -9,6 +9,18 @@ Key features:
 2) Three different difficulty levels, set according to a basic probabilistic hit algorithm.
 3) Phaser 3/React front-end with socket-connected API server for Kraken shot logic.
 
+Key learnings:
+1) Identified mission-critical functions and articulate the issues to discuss progress and contingency with mentors (project management).
+2) Adapted validation over supervisory approach Working with remote mentor with experience in our gaming library.
+3) Manage teams productivity and rebound from hurdles.
+4) Focus on implementation: value effectiveness over being right.
+5) Continuous deployment with Heroku
+
+Future features:
+1) Voice commands
+2) Reinforcement learning via a separate API
+
+
 ### Mobile View
 
 #### New Game
@@ -33,6 +45,14 @@ Key features:
 
 
 ## Project Setup
+
+## Built With
+
+* [Phaser](https://phaser.io/) - Front-ender
+* [React](https://reactjs.org/) - control front-end render and display
+* [socket.io](https://socket.io/) - Sockets
+* [jQuery](https://jquery.com/) - simple rendering page for /GET route to serve the server stateic file
+* [Heroku](https://heroku.com) - continuous deployment
 
 ### Dependencies
 
